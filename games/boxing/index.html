@@ -2,49 +2,50 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Racing</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Boxing</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 </head>
 <body>
 <div id="wrap">
-  <canvas id="c" width="320" height="480"></canvas>
-  <div id="hud" class="hud hidden">
-    <span id="hlevel"></span>
-    <span id="hscore"></span>
-    <span id="hmny"></span>
-  </div>
+  <canvas id="c" width="300" height="400"></canvas>
+
   <div id="menu" class="overlay">
-    <h2>Racing</h2>
+    <h2>Boxing</h2>
     <p id="userinfo"></p>
     <p>Level <b id="mlevel"></b> | XP <span id="mxp"></span>/<span id="mneed"></span></p>
     <p>Money: <b id="mmoney"></b></p>
-    <button id="start">Start Race</button>
-    <button id="shop">Vehicles</button>
+    <p id="mstats" class="small"></p>
+    <button id="fight">Fight</button>
+    <button id="fighters">Fighters</button>
     <button id="missions">Missions</button>
-    <p class="small">Controls: Left/Right arrows</p>
+    <button id="home" class="alt">Home</button>
   </div>
-  <div id="shopv" class="overlay hidden">
-    <h2>Vehicles</h2>
-    <div id="vlist"></div>
+
+  <div id="fghv" class="overlay hidden">
+    <h2>Fighters</h2>
+    <div id="flist" class="list"></div>
     <button id="back1">Back</button>
   </div>
+
   <div id="missv" class="overlay hidden">
     <h2>Missions</h2>
-    <div id="mlist"></div>
+    <div id="mlist" class="list"></div>
     <button id="back2">Back</button>
   </div>
+
   <div id="over" class="overlay hidden">
-    <h2>Crash!</h2>
-    <p>Distance: <b id="odist"></b></p>
-    <p>Earned: <b id="oearn"></b></p>
-    <button id="retry">Retry</button>
+    <h2 id="otitle">Result</h2>
+    <p id="otext"></p>
+    <button id="retry">Fight Again</button>
     <button id="menu2">Menu</button>
   </div>
-  <div id="touch" class="touch hidden">
-    <button id="tleft">◀</button>
-    <button id="tright">▶</button>
+
+  <div id="controls" class="controls hidden">
+    <button id="btnBlock" class="ctrl blk">BLOCK<br><small>8</small></button>
+    <button id="btnPunch" class="ctrl pch">PUNCH<br><small>5</small></button>
+    <button id="btnSkill" class="ctrl skl">SKILL<br><small>0</small></button>
   </div>
 </div>
 <script src="game.js"></script>
