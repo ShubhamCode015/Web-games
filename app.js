@@ -1,5 +1,6 @@
 const KEY='wg_user';
 const GAMES_KEY='wg_games';
+const DEFAULT_GAMES=[{title:'Racing',path:'games/racing'}];
 const $=id=>document.getElementById(id);
 let user=JSON.parse(localStorage.getItem(KEY)||'null');
 
@@ -36,23 +37,31 @@ function render(){
       <p class="small" id="empty"></p>
     </div>`;
   const pl=$('plist');
-  const rp=JSON.parse(localStorage.getItem('racing_'+user.name)||'null');
-  if(rp){const d=document.createElement('div');d.className='small';d.textContent=`Racing: Level ${rp.level}, Money ${rp.money}, Distance ${rp.distance}`;pl.appendChild(d);}
-  else{pl.textContent='No progress yet.';}
-  const gl=$('glist');
-  fetch('games/games.json').then(r=>r.json()).then(d=>{
-    const games=d.games||[];
-    games.forEach(g=>{
-      const el=document.createElement('div');
-      el.className='game';
-      el.textContent=g.title;
-      el.onclick=()=>location.href=g.path+'?user='+encodeURIComponent(user.name);
-      gl.appendChild(el);
-    });
-    if(!games.length)$('empty').textContent='No games yet. Add games to /games folder.';
-  }).catch(()=>{$('empty').textContent='Could not load games list.';});
+  let anyProgress=false;
+  const rp=readJSON('racing_'+user.name);
+  if(rp){const d=document.createElement('div');d.className='small';d.textContent=`Racing: Level ${rp.level}, Money ${rp.money}, Distance ${rp.distance}`;pl.appendChild(d);anyProgress=true;}
+  const bp=readJSON('boxing_'+user.name);
+  if(bp){const d=document.createElement('div');d.className='small';d.textContent=`Boxing: Level ${bp.level}, Money ${bp.money}, Wins ${bp.wins}`;pl.appendChild(d);anyProgress=true;}
+  if(!anyProgress)pl.textContent='No progress yet.';
+  renderGames($('glist'),DEFAULT_GAMES);
+  fetch('games/games.json').then(r=>{if(!r.ok)throw new Error('games.json ' + r.status);return r.json();}).then(d=>{
+    if(d&&d.games&&d.games.length)renderGames($('glist'),d.games);
+  }).catch(e=>{console.warn('Games list not loaded:',e.message);});
   $('reset').onclick=()=>{localStorage.removeItem(KEY);user=null;render();};
 }
+function renderGames(gl,games){
+  gl.innerHTML='';
+  games.forEach(g=>{
+    const el=document.createElement('div');
+    el.className='game';
+    el.textContent=g.title;
+    el.onclick=()=>{location.href=g.path+'?user='+encodeURIComponent(user.name);};
+    gl.appendChild(el);
+  });
+  const empty=$('empty');
+  if(empty)empty.textContent=games.length?'':'No games yet. Add games to /games folder.';
+}
+function readJSON(key){try{return JSON.parse(localStorage.getItem(key)||'null');}catch(e){return null;}}
 function escape(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 render();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
