@@ -1,0 +1,11 @@
+{
+  "name": "Offline Web Games",
+  "short_name": "WebGames",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

@@ -1,0 +1,19 @@
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#111;color:#eee;min-height:100vh;display:flex;align-items:center;justify-content:center}
+#app{width:100%;max-width:420px;padding:16px}
+.card{background:#1c1c1c;border-radius:12px;padding:16px;margin-bottom:12px}
+h1{font-size:20px;margin-bottom:8px}
+input,button{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:none;font-size:16px}
+input{background:#2a2a2a;color:#eee}
+button{background:#3b82f6;color:#fff;font-weight:600}
+button:active{opacity:.8}
+.row{display:flex;gap:8px}
+.row>*{flex:1}
+.thumb{width:64px;height:64px;border-radius:50%;object-fit:cover;background:#333;margin:0 auto 8px;display:block}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.game{background:#2a2a2a;padding:12px;border-radius:8px;text-align:center;cursor:pointer}
+.game:hover{background:#333}
+.small{font-size:12px;color:#aaa}
+.hidden{display:none}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.top b{font-size:18px}
