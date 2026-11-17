@@ -1,82 +1,105 @@
-const CACHE='wg-v5';
+const CACHE='wg-ca173eee60';
 const CORE=[
   './',
-  './index.html',
-  './style.css',
+  './manifest.appcache',
   './app.js',
-  './manifest.json',
-  './icon.svg',
-  './games/games.json',
-  './games/racing/',
-  './games/racing/index.html',
-  './games/racing/style.css',
-  './games/racing/game.js',
-  './games/boxing/',
+  './games/boxing/game.js',
   './games/boxing/index.html',
   './games/boxing/style.css',
-  './games/boxing/game.js'
+  './games/games.json',
+  './games/racing/game.js',
+  './games/racing/index.html',
+  './games/racing/style.css',
+  './icon.svg',
+  './index.html',
+  './manifest.json',
+  './style.css'
 ];
 
 self.addEventListener('install',e=>{
-  e.waitUntil((async()=>{
-    const cache=await caches.open(CACHE);
-    await Promise.allSettled(CORE.map(u=>cache.add(u)));
-    await self.skipWaiting();
-  })());
+  e.waitUntil(
+    caches.open(CACHE).then(function(cache){
+      return Promise.all(CORE.map(function(u){
+        return cache.add(u).catch(function(){});
+      }));
+    }).then(function(){return self.skipWaiting();})
+  );
 });
 
 self.addEventListener('activate',e=>{
-  e.waitUntil((async()=>{
-    const keys=await caches.keys();
-    await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));
-    await self.clients.claim();
-  })());
+  e.waitUntil(
+    caches.keys().then(function(keys){
+      return Promise.all(keys.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));
+    }).then(function(){return self.clients.claim();})
+  );
 });
 
-async function networkFirst(request){
-  try{
-    const res=await fetch(request);
-    if(res&&res.status===200&&res.type==='basic'){
-      const copy=res.clone();
-      caches.open(CACHE).then(c=>c.put(request,copy)).catch(()=>{});
-    }
-    return res;
-  }catch(e){
-    const exact=await caches.match(request);
+function withTimeout(promise,ms){
+  return new Promise(function(resolve){
+    var done=false;
+    var t=setTimeout(function(){if(!done){done=true;resolve(null);}},ms);
+    promise.then(function(v){if(!done){done=true;clearTimeout(t);resolve(v);}})
+      .catch(function(){if(!done){done=true;clearTimeout(t);resolve(null);}});
+  });
+}
+
+function cacheFallback(request){
+  return caches.match(request).then(function(exact){
     if(exact)return exact;
-    const loose=await caches.match(request,{ignoreSearch:true});
-    if(loose)return loose;
-    throw e;
-  }
+    return caches.match(request,{ignoreSearch:true});
+  });
+}
+
+function networkFirst(request){
+  return withTimeout(fetch(request),4000).then(function(res){
+    if(res&&res.status===200&&(res.type==='basic'||res.type==='default')){
+      var copy=res.clone();
+      caches.open(CACHE).then(function(c){return c.put(request,copy);}).catch(function(){});
+      return res;
+    }
+    return cacheFallback(request).then(function(cached){return cached||res;});
+  }).then(function(r){
+    if(r)return r;
+    throw new Error('offline');
+  });
+}
+
+function navigationResponse(request){
+  return networkFirst(request).catch(function(){
+    return cacheFallback(request).then(function(exact){
+      return exact||caches.match('./index.html');
+    });
+  }).then(function(res){
+    return res||new Response('<h1>Offline</h1>',{headers:{'Content-Type':'text/html'}});
+  });
 }
 
 self.addEventListener('fetch',e=>{
-  const req=e.request;
+  var req=e.request;
   if(req.method!=='GET')return;
-  const url=new URL(req.url);
+  var url=new URL(req.url);
   if(url.origin!==location.origin)return;
 
-  const isNav=req.mode==='navigate';
-  const fresh=/\.(?:js|css|json|html)$/i.test(url.pathname)||isNav;
+  var isNav=req.mode==='navigate';
+  var isCode=/\.(?:js|css|json|html)$/i.test(url.pathname);
 
   if(isNav){
-    e.respondWith((async()=>{
-      try{return await networkFirst(req);}
-      catch(e){
-        const home=await caches.match('./index.html');
-        return home||Response.error();
-      }
-    })());
+    e.respondWith(navigationResponse(req));
     return;
   }
 
-  if(fresh){
-    e.respondWith(networkFirst(req).catch(async()=>{
-      const cached=await caches.match(req,{ignoreSearch:true});
-      return cached||Response.error();
+  if(isCode){
+    e.respondWith(networkFirst(req).catch(function(){
+      return cacheFallback(req).then(function(cached){
+        return cached||new Response('',{status:503,statusText:'Offline'});
+      });
     }));
     return;
   }
 
-  e.respondWith(caches.match(req).then(r=>r||networkFirst(req)));
+  e.respondWith(
+    caches.match(req).then(function(cached){
+      return cached||networkFirst(req);
+    }).catch(function(){return new Response('',{status:503});})
+  );
 });

@@ -1,0 +1,25 @@
+CACHE MANIFEST
+# Offline Web Games wg-ca173eee60
+
+CACHE:
+app.js
+games/boxing/game.js
+games/boxing/index.html
+games/boxing/style.css
+games/games.json
+games/racing/game.js
+games/racing/index.html
+games/racing/style.css
+icon.svg
+index.html
+manifest.json
+style.css
+
+NETWORK:
+*
+http://*
+https://*
+
+FALLBACK:
+games/boxing/ games/boxing/index.html
+games/racing/ games/racing/index.html

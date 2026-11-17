@@ -1,94 +1,205 @@
 const KEY='wg_user';
-const GAMES_KEY='wg_games';
 const DEFAULT_GAMES=[
-  {title:'Racing',path:'games/racing/'},
-  {title:'Boxing',path:'games/boxing/'}
+  {title:'Racing',path:'games/racing/index.html',icon:'🏎️',desc:'Pseudo-3D street racing'},
+  {title:'Boxing',path:'games/boxing/index.html',icon:'🥊',desc:'3D ring fighting'}
 ];
 const $=id=>document.getElementById(id);
-let user=JSON.parse(localStorage.getItem(KEY)||'null');
 
-function saveUser(u){user=u;localStorage.setItem(KEY,JSON.stringify(u));}
+function storeGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function storeSet(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}}
+function storeDel(k){try{localStorage.removeItem(k);}catch(e){}}
+function readJSON(key){try{return JSON.parse(storeGet(key)||'null');}catch(e){return null;}}
+
+let user=readJSON(KEY);
+
+function saveUser(u){user=u;storeSet(KEY,JSON.stringify(u));}
+function escape(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function showFatal(msg){
+  const app=$('app');
+  if(!app)return;
+  app.innerHTML=`<div class="card"><h1>Something went wrong</h1>
+    <p class="small">${escape(msg||'The app could not start on this device.')}</p>
+    <button id="reload">Reload</button></div>`;
+  const r=$('reload');
+  if(r)r.onclick=()=>location.reload();
+}
+
+function bootstrap(){
+  try{
+    if(!$('app')){
+      document.body.innerHTML='<div id="app"></div>';
+    }
+    render();
+  }catch(e){
+    console.error(e);
+    showFatal('Startup error: '+e.message);
+  }
+}
+
 function render(){
   const app=$('app');
   if(!user||!user.name){
     app.innerHTML=`
-      <div class="card">
+      <div class="card profile-card">
         <h1>Create Profile</h1>
-        <input id="name" placeholder="Username (required)" maxlength="20">
+        <div class="avatar-pick">
+          <img id="preview" class="thumb" alt="" hidden>
+          <span id="avatarHint" class="small">Optional photo</span>
+        </div>
+        <input id="name" placeholder="Username (required)" maxlength="20" autocomplete="off">
         <input id="photo" type="file" accept="image/*">
-        <button id="save">Save & Continue</button>
+        <button id="save">Save &amp; Continue</button>
         <p class="small">Photo optional. Works offline.</p>
       </div>`;
-    $('save').onclick=async()=>{
-      const name=$('name').value.trim();
+    const photoInput=$('photo');
+    if(photoInput)photoInput.onchange=()=>{
+      const f=photoInput.files[0];
+      const img=$('preview');
+      if(f&&img){const r=new FileReader();r.onload=()=>{img.src=r.result;img.hidden=false;const h=$('avatarHint');if(h)h.hidden=true;};r.readAsDataURL(f);}
+    };
+    $('save').onclick=()=>{
+      const name=($('name').value||'').trim();
       if(!name){alert('Username required');return;}
-      let photo=null;
-      const f=$('photo').files[0];
-      if(f){photo=await new Promise((res)=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f);});}
-      saveUser({name,photo});
-      render();
+      const f=$('photo')&&$('photo').files?$('photo').files[0]:null;
+      const finish=(photo)=>{saveUser({name,photo:photo||null});render();};
+      if(!f){finish(null);return;}
+      try{
+        const r=new FileReader();
+        r.onload=()=>finish(r.result);
+        r.onerror=()=>finish(null);
+        r.readAsDataURL(f);
+      }catch(e){finish(null);}
     };
     return;
   }
+  const safeName=escape(user.name);
   app.innerHTML=`
-    <div class="top"><b>Hi, ${escape(user.name)}</b><button id="reset" style="width:auto;padding:6px 10px">Reset</button></div>
-    ${user.photo?`<img class="thumb" src="${user.photo}">`:''}
+    <div class="top">
+      <div class="top-user">
+        ${user.photo?`<img class="thumb tiny" src="${user.photo}" alt="">`:`<span class="thumb tiny initial">${escape((user.name[0]||'?').toUpperCase())}</span>`}
+        <b>Hi, ${safeName}</b>
+      </div>
+      <button id="reset" class="mini">Reset</button>
+    </div>
     <div class="card" id="progress"><h1>Progress</h1><div id="plist"></div></div>
     <div class="card">
       <h1>Offline Games</h1>
       <div class="games" id="glist"></div>
       <p class="small" id="empty"></p>
+      <p class="small cacheline" id="cacheStatus"></p>
     </div>`;
   const pl=$('plist');
   let anyProgress=false;
-  const rp=readJSON('racing_'+user.name);
-  if(rp){const d=document.createElement('div');d.className='small';d.textContent=`Racing: Level ${rp.level}, Money ${rp.money}, Distance ${rp.distance}`;pl.appendChild(d);anyProgress=true;}
-  const bp=readJSON('boxing_'+user.name);
-  if(bp){const d=document.createElement('div');d.className='small';d.textContent=`Boxing: Level ${bp.level}, Money ${bp.money}, Wins ${bp.wins}`;pl.appendChild(d);anyProgress=true;}
-  if(!anyProgress)pl.textContent='No progress yet.';
+  try{
+    const rp=readJSON('racing_'+user.name);
+    if(rp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot race"></span>Racing <b>Lv ${escape(rp.level)}</b> · $${escape(rp.money)} · ${escape(rp.distance)}m`;pl.appendChild(d);anyProgress=true;}
+    const bp=readJSON('boxing_'+user.name);
+    if(bp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot box"></span>Boxing <b>Lv ${escape(bp.level)}</b> · $${escape(bp.money)} · ${escape(bp.wins)} wins`;pl.appendChild(d);anyProgress=true;}
+  }catch(e){}
+  if(!anyProgress)pl.textContent='No progress yet. Play a game to get started.';
   renderGames($('glist'),DEFAULT_GAMES);
-  fetch('games/games.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('games.json ' + r.status);return r.json();}).then(d=>{
+  fetch('games/games.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('games.json '+r.status);return r.json();}).then(d=>{
     if(d&&Array.isArray(d.games)&&d.games.length)renderGames($('glist'),d.games);
   }).catch(e=>{console.warn('Games list not loaded:',e.message);});
-  $('reset').onclick=()=>{localStorage.removeItem(KEY);user=null;render();};
+  $('reset').onclick=()=>{
+    if(!confirm('Reset profile? Game progress stays saved.'))return;
+    storeDel(KEY);user=null;render();
+  };
+  updateCacheStatus();
 }
-function gameUrl(path,name){
+
+function gameUrl(path){
   let url=String(path||'').trim();
   if(!url)return null;
-  const parts=url.split('?');
-  let base=parts[0];
-  if(base&&!base.endsWith('/')&&!/\/[^/]+\.[^/]+$/.test(base))base+='/';
-  const query=(parts[1]?'?'+parts[1]+'&':'?')+'user='+encodeURIComponent(name);
-  return base+query;
+  url=url.split('?')[0].split('#')[0];
+  if(/\/$/.test(url))url+='index.html';
+  return url;
 }
+
+function offlineReady(){
+  var ac=window.applicationCache||null;
+  if(ac){
+    try{
+      if(ac.status===ac.CACHED||ac.status===ac.UPDATEREADY)return true;
+    }catch(e){}
+  }
+  try{
+    if(navigator.serviceWorker&&navigator.serviceWorker.controller)return true;
+  }catch(e){}
+  return false;
+}
+function updateCacheStatus(){
+  var el=$('cacheStatus');
+  if(!el)return;
+  var ready=offlineReady();
+  if(navigator.onLine===false){
+    el.textContent=ready?'Offline mode — games ready':'Offline — open once with internet first';
+    el.className='small cacheline '+(ready?'ready':'warn');
+  }else if(ready){
+    el.textContent='Offline ready ✓ — works without internet';
+    el.className='small cacheline ready';
+  }else{
+    el.textContent='Saving for offline use… (online rakho thodi der)';
+    el.className='small cacheline saving';
+  }
+}
+
 function renderGames(gl,games){
+  if(!gl)return;
   gl.innerHTML='';
   games.forEach(g=>{
     const el=document.createElement('div');
     el.className='game';
-    el.textContent=g.title;
-    el.onclick=()=>{const url=gameUrl(g.path,user.name);if(url)location.href=url;};
+    el.innerHTML=`<div class="gicon">${escape(g.icon||'🎮')}</div><div class="gtitle">${escape(g.title)}</div><div class="gdesc small">${escape(g.desc||'')}</div>`;
+    el.onclick=()=>{const url=gameUrl(g.path);if(url)location.href=url;};
     gl.appendChild(el);
   });
   const empty=$('empty');
   if(empty)empty.textContent=games.length?'':'No games yet. Add games to /games folder.';
 }
-function readJSON(key){try{return JSON.parse(localStorage.getItem(key)||'null');}catch(e){return null;}}
-function escape(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-render();
+
+bootstrap();
+
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').then(reg=>{
-    reg.addEventListener('updatefound',()=>{
-      const nw=reg.installing;
-      if(!nw)return;
-      nw.addEventListener('statechange',()=>{
-        if(nw.state==='activated'&&navigator.serviceWorker.controller){
-          if(!sessionStorage.getItem('wg_reloaded')){
-            sessionStorage.setItem('wg_reloaded','1');
-            location.reload();
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').then(reg=>{
+      try{reg.update();}catch(e){}
+      reg.addEventListener('updatefound',()=>{
+        const nw=reg.installing;
+        if(!nw)return;
+        nw.addEventListener('statechange',()=>{
+          if(nw.state==='activated'&&navigator.serviceWorker.controller){
+            let done=false;
+            try{done=sessionStorage.getItem('wg_reloaded')==='1';}catch(e){done=false;}
+            if(!done){
+              try{sessionStorage.setItem('wg_reloaded','1');}catch(e){}
+              location.reload();
+            }
           }
-        }
+        });
       });
+    }).catch(()=>{});
+  });
+}
+
+try{
+  window.addEventListener('online',updateCacheStatus);
+  window.addEventListener('offline',updateCacheStatus);
+}catch(e){}
+
+if(window.applicationCache){
+  try{
+    var ac=window.applicationCache;
+    function acSync(){
+      try{
+        if(ac.status===ac.UPDATEREADY)ac.swapCache();
+      }catch(e){}
+      updateCacheStatus();
+    }
+    ['checking','downloading','progress','cached','updateready','noupdate','error','obsolete'].forEach(function(ev){
+      try{ac.addEventListener(ev,acSync,false);}catch(e){}
     });
-  }).catch(()=>{});
+    acSync();
+  }catch(e){}
 }

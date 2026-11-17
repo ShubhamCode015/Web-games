@@ -1,15 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="manifest.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b12">
 <title>Offline Web Games</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+  <div class="card">
+    <h1>Loading…</h1>
+    <p class="small">If this message stays, tap below to reload.</p>
+    <button onclick="location.reload()">Reload</button>
+  </div>
+</div>
+<noscript><div class="card"><h1>JavaScript required</h1><p class="small">Please enable JavaScript to play.</p></div></noscript>
 <script src="app.js"></script>
 </body>
 </html>
