@@ -1,1 +1,1 @@
-{"games":[{"title":"Racing","path":"games/racing/"},{"title":"Boxing","path":"games/boxing/"}]}
+{"games":[{"title":"Racing","path":"games/racing/index.html","icon":"🏎️","desc":"Pseudo-3D street racing"},{"title":"Boxing","path":"games/boxing/index.html","icon":"🥊","desc":"3D ring fighting"}]}
