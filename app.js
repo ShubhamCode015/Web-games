@@ -1,6 +1,9 @@
 const KEY='wg_user';
 const GAMES_KEY='wg_games';
-const DEFAULT_GAMES=[{title:'Racing',path:'games/racing'}];
+const DEFAULT_GAMES=[
+  {title:'Racing',path:'games/racing/'},
+  {title:'Boxing',path:'games/boxing/'}
+];
 const $=id=>document.getElementById(id);
 let user=JSON.parse(localStorage.getItem(KEY)||'null');
 
@@ -44,10 +47,19 @@ function render(){
   if(bp){const d=document.createElement('div');d.className='small';d.textContent=`Boxing: Level ${bp.level}, Money ${bp.money}, Wins ${bp.wins}`;pl.appendChild(d);anyProgress=true;}
   if(!anyProgress)pl.textContent='No progress yet.';
   renderGames($('glist'),DEFAULT_GAMES);
-  fetch('games/games.json').then(r=>{if(!r.ok)throw new Error('games.json ' + r.status);return r.json();}).then(d=>{
-    if(d&&d.games&&d.games.length)renderGames($('glist'),d.games);
+  fetch('games/games.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('games.json ' + r.status);return r.json();}).then(d=>{
+    if(d&&Array.isArray(d.games)&&d.games.length)renderGames($('glist'),d.games);
   }).catch(e=>{console.warn('Games list not loaded:',e.message);});
   $('reset').onclick=()=>{localStorage.removeItem(KEY);user=null;render();};
+}
+function gameUrl(path,name){
+  let url=String(path||'').trim();
+  if(!url)return null;
+  const parts=url.split('?');
+  let base=parts[0];
+  if(base&&!base.endsWith('/')&&!/\/[^/]+\.[^/]+$/.test(base))base+='/';
+  const query=(parts[1]?'?'+parts[1]+'&':'?')+'user='+encodeURIComponent(name);
+  return base+query;
 }
 function renderGames(gl,games){
   gl.innerHTML='';
@@ -55,7 +67,7 @@ function renderGames(gl,games){
     const el=document.createElement('div');
     el.className='game';
     el.textContent=g.title;
-    el.onclick=()=>{location.href=g.path+'?user='+encodeURIComponent(user.name);};
+    el.onclick=()=>{const url=gameUrl(g.path,user.name);if(url)location.href=url;};
     gl.appendChild(el);
   });
   const empty=$('empty');
@@ -64,4 +76,19 @@ function renderGames(gl,games){
 function readJSON(key){try{return JSON.parse(localStorage.getItem(key)||'null');}catch(e){return null;}}
 function escape(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 render();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    reg.addEventListener('updatefound',()=>{
+      const nw=reg.installing;
+      if(!nw)return;
+      nw.addEventListener('statechange',()=>{
+        if(nw.state==='activated'&&navigator.serviceWorker.controller){
+          if(!sessionStorage.getItem('wg_reloaded')){
+            sessionStorage.setItem('wg_reloaded','1');
+            location.reload();
+          }
+        }
+      });
+    });
+  }).catch(()=>{});
+}
