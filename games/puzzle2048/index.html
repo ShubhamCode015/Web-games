@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" manifest="../../manifest.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b12">
+<title>2048 Puzzle</title>
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="wrap">
+  <div id="gameScreen">
+    <div id="topbar">
+      <div class="brand">2048 <span>Puzzle</span></div>
+      <button id="mute" class="iconbtn" type="button">Sound: On</button>
+    </div>
+    <div id="hud">
+      <div class="box"><span class="lbl">Score</span><b id="gscore">0</b></div>
+      <div class="box"><span class="lbl">Best</span><b id="gbest">0</b></div>
+      <div class="box gold"><span class="lbl">Coins</span><b id="gcoins">0</b></div>
+    </div>
+    <div id="boardWrap">
+      <div id="board" aria-label="2048 board">
+        <div id="cells"></div>
+        <div id="tiles"></div>
+        <div id="fx"></div>
+      </div>
+    </div>
+    <div id="gameFooter">
+      <span id="movesLine" class="small">Moves: <b id="gmoves">0</b></span>
+      <div class="fbtns">
+        <button id="newgame" type="button">New Game</button>
+        <button id="menu3" type="button" class="alt">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="menu" class="overlay">
+    <h2>2048 Puzzle</h2>
+    <p id="userinfo"></p>
+    <p>Level <b id="mlevel"></b> | XP <span id="mxp"></span>/<span id="mneed"></span></p>
+    <p>Money: <b id="mmoney"></b></p>
+    <p>Best: <b id="mbest"></b> &middot; Best Tile: <b id="mtile"></b></p>
+    <p id="mstats" class="small"></p>
+    <button id="start">Play</button>
+    <button id="missions">Missions</button>
+    <button id="home" class="alt">Home</button>
+    <p class="small">Arrow keys or swipe &middot; Merge tiles to reach 2048</p>
+  </div>
+
+  <div id="missv" class="overlay hidden">
+    <h2>Missions</h2>
+    <div id="mlist"></div>
+    <button id="back2">Back</button>
+  </div>
+
+  <div id="over" class="overlay hidden">
+    <h2 id="otitle">Game Over</h2>
+    <p id="otext">No more moves.</p>
+    <p>Score: <b id="oscore"></b> &middot; Best: <b id="obest"></b></p>
+    <p>Coins earned: <b id="ocoins"></b></p>
+    <button id="keepgoing">Keep Going</button>
+    <button id="retry">New Game</button>
+    <button id="menu2" class="alt">Menu</button>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
