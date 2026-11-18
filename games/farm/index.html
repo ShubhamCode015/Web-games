@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" manifest="../../manifest.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b0b12">
+<title>Farm Sim</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+</head>
+<body>
+<div id="wrap">
+  <div id="farm" class="hidden">
+    <div id="hud" class="hud">
+      <span id="hday">Day 1</span>
+      <span id="hlvl">Lv 1</span>
+      <span id="hmny">$0</span>
+      <button id="muteFarm" class="iconbtn" aria-label="Toggle sound">🔊</button>
+    </div>
+    <div class="xpwrap">
+      <div class="bar xpbar"><i id="farmXpFill"></i></div>
+      <span id="farmXpText" class="xptext">XP 0/100</span>
+    </div>
+    <div id="grid"></div>
+    <div id="toolbar">
+      <div id="seeds" class="seedrow"></div>
+        <div id="tools">
+        <button id="waterTool" class="tool">💧<small>Water [7]</small></button>
+        <button id="unlockTool" class="tool">🔓<small id="unlockCost">$100</small></button>
+        <button id="menuBtn" class="tool alt">☰<small>Menu [0]</small></button>
+      </div>
+      <p class="small kaioshint">Keys: 1-6 seeds · 7 water · 9 unlock · arrows move · OK select</p>
+    </div>
+  </div>
+
+  <div id="menu" class="overlay">
+    <h2>Farm Sim</h2>
+    <p id="userinfo"></p>
+    <p>Level <b id="mlevel"></b> | XP <span id="mxp"></span>/<span id="mneed"></span></p>
+    <div class="bar xpbar menubar"><i id="mxpfill"></i></div>
+    <p>Money: <b id="mmoney"></b> · Day <b id="mday"></b></p>
+    <p id="mstats" class="small"></p>
+    <button id="play">Play Farm</button>
+    <button id="missions">Missions</button>
+    <button id="muteMenu" class="alt">Sound: On</button>
+    <button id="home" class="alt">Home</button>
+    <p class="small">Plant seeds · Water to speed growth · Harvest for coins</p>
+  </div>
+
+  <div id="missv" class="overlay hidden">
+    <h2>Missions</h2>
+    <div id="mlist"></div>
+    <button id="back2">Back</button>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
