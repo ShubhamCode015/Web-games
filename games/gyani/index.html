@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="hi" manifest="../../manifest.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1a0505">
+<title>कौन बनेगा ज्ञानी</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+</head>
+<body>
+<div id="wrap">
+
+  <div id="hud" class="hud hidden">
+    <div class="hleft"><b id="hlvl">स्तर 1</b><span id="htitle" class="hsub"></span></div>
+    <div class="hright">
+      <span class="hitem">₹<b id="hmny">0</b></span>
+      <span class="hitem">🔥<b id="hstreak">0</b></span>
+      <button id="hmute" class="hbtn" aria-label="ध्वनि">🔊</button>
+      <button id="hquit" class="hbtn" aria-label="बाहर">✕</button>
+    </div>
+  </div>
+
+  <div id="game" class="hidden">
+    <div id="stageArea">
+      <div id="bigEmoji">🪰</div>
+      <div id="sizeLabel"></div>
+      <div id="stageTitle"></div>
+      <div id="stageEn"></div>
+      <div class="gbarwrap"><div class="gbar"><i id="gyanFill"></i></div><span id="gyanText"></span></div>
+    </div>
+
+    <div id="qcard">
+      <div id="timerWrap"><i id="timerFill"></i></div>
+      <div id="timerText">45</div>
+      <div id="question">प्रश्न…</div>
+      <div id="options">
+        <button class="opt" data-i="0"><span class="onum">1</span><span class="otext"></span></button>
+        <button class="opt" data-i="1"><span class="onum">2</span><span class="otext"></span></button>
+        <button class="opt" data-i="2"><span class="onum">3</span><span class="otext"></span></button>
+        <button class="opt" data-i="3"><span class="onum">4</span><span class="otext"></span></button>
+      </div>
+      <div id="streakRow">सही जवाब पर धन और ज्ञान बढ़ता है · 3+ स्ट्रीक पर +25% बोनस</div>
+    </div>
+  </div>
+
+  <div id="menu" class="overlay">
+    <div class="mandala">ॐ</div>
+    <h1 id="gameTitle">कौन बनेगा<br>ज्ञानी</h1>
+    <p class="tagline">ज्ञान ही उन्नति है</p>
+    <div id="menuEmoji">🪰</div>
+    <p id="menuStage" class="stageline">स्तर 1 — फेरीफ्लाई ततैया</p>
+    <p id="menuEn" class="small"></p>
+    <div class="gbarwrap menu"><div class="gbar"><i id="menuFill"></i></div><span id="menuNext"></span></div>
+    <p class="statsline"><span>₹<b id="mmoney">0</b></span><span>कुल ज्ञान <b id="mtotal">0</b></span><span>सर्वश्रेष्ठ स्ट्रीक <b id="mbest">0</b> 🔥</span></p>
+    <button id="play">खेलो ▶</button>
+    <button id="achv" class="alt">उपलब्धि 🏆</button>
+    <button id="missions" class="alt">मिशन 🎯</button>
+    <button id="muteMenu" class="alt">ध्वनि: चालू</button>
+    <button id="home" class="alt">होम</button>
+    <p class="small">कीबोर्ड: 1-4 जवाब · ↑↓ (2/8) फोकस · Enter/5 चुनें<br>* बाहर · # ध्वनि चालू/बंद</p>
+  </div>
+
+  <div id="achvV" class="overlay hidden">
+    <h2>उपलब्धियाँ 🏆</h2>
+    <p class="small">पहले अनलॉक किए शीर्षक कभी वापस नहीं जाते</p>
+    <div id="agrid"></div>
+    <button id="back1">वापस</button>
+  </div>
+
+  <div id="missV" class="overlay hidden">
+    <h2>मिशन 🎯</h2>
+    <div id="mlist"></div>
+    <button id="back2">वापस</button>
+  </div>
+
+  <div id="promote" class="overlay hidden">
+    <div id="rays"></div>
+    <p class="promote-small">बधाई हो!</p>
+    <div id="promoEmoji">🧘</div>
+    <p class="promote-small">अब आप हैं</p>
+    <h2 id="promoTitle" class="gold">शिष्य</h2>
+    <p id="promoSub" class="small"></p>
+    <p id="promoBonus" class="bonus">+₹1000 बोनस</p>
+    <button id="promoOk">जारी रखें ▶</button>
+  </div>
+
+  <div id="summary" class="overlay hidden">
+    <h2>आज का सारांश</h2>
+    <p class="srow">सही जवाब: <b id="sCorrect">0</b></p>
+    <p class="srow">गलत जवाब: <b id="sWrong">0</b></p>
+    <p class="srow">सर्वश्रेष्ठ स्ट्रीक: <b id="sStreak">0</b> 🔥</p>
+    <p class="srow">कुल धन: <b>₹<span id="sMoney">0</span></b></p>
+    <p class="srow">कुल ज्ञान: <b id="sTotal">0</b></p>
+    <button id="again">खेलें फिर से ▶</button>
+    <button id="sumMenu" class="alt">मेन्यू</button>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+</div>
+<script src="questions.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
