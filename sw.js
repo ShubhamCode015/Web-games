@@ -1,4 +1,4 @@
-const CACHE='wg-edea1ce076';
+const CACHE='wg-f1e13ecd21';
 const CORE=[
   './',
   './manifest.appcache',
@@ -6,7 +6,20 @@ const CORE=[
   './games/boxing/game.js',
   './games/boxing/index.html',
   './games/boxing/style.css',
+  './games/farm/game.js',
+  './games/farm/index.html',
+  './games/farm/style.css',
   './games/games.json',
+  './games/gyani/game.js',
+  './games/gyani/index.html',
+  './games/gyani/questions.js',
+  './games/gyani/style.css',
+  './games/hillclimb/game.js',
+  './games/hillclimb/index.html',
+  './games/hillclimb/style.css',
+  './games/puzzle2048/game.js',
+  './games/puzzle2048/index.html',
+  './games/puzzle2048/style.css',
   './games/racing/game.js',
   './games/racing/index.html',
   './games/racing/style.css',

@@ -1,7 +1,11 @@
 const KEY='wg_user';
 const DEFAULT_GAMES=[
-  {title:'Racing',path:'games/racing/index.html',icon:'🏎️',desc:'Pseudo-3D street racing'},
-  {title:'Boxing',path:'games/boxing/index.html',icon:'🥊',desc:'3D ring fighting'}
+  {title:'Racing',path:'games/racing/index.html',icon:'🏎️',desc:'2D top-down street racing'},
+  {title:'Boxing',path:'games/boxing/index.html',icon:'🥊',desc:'2D side-view ring fighting'},
+  {title:'Hill Climb',path:'games/hillclimb/index.html',icon:'🚙',desc:'Off-road hill climbing'},
+  {title:'2048 Puzzle',path:'games/puzzle2048/index.html',icon:'🔢',desc:'Number tile puzzle'},
+  {title:'Farm Sim',path:'games/farm/index.html',icon:'🌾',desc:'Idle farming simulation'},
+  {title:'Kon Banega Gyani',path:'games/gyani/index.html',icon:'🧠',desc:'KBC-style ज्ञान की यात्रा'}
 ];
 const $=id=>document.getElementById(id);
 
@@ -96,6 +100,14 @@ function render(){
     if(rp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot race"></span>Racing <b>Lv ${escape(rp.level)}</b> · $${escape(rp.money)} · ${escape(rp.distance)}m`;pl.appendChild(d);anyProgress=true;}
     const bp=readJSON('boxing_'+user.name);
     if(bp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot box"></span>Boxing <b>Lv ${escape(bp.level)}</b> · $${escape(bp.money)} · ${escape(bp.wins)} wins`;pl.appendChild(d);anyProgress=true;}
+    const hp=readJSON('hillclimb_'+user.name);
+    if(hp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot hill"></span>Hill Climb <b>Lv ${escape(hp.level)}</b> · $${escape(hp.money)} · best ${escape(hp.best||0)}m`;pl.appendChild(d);anyProgress=true;}
+    const p2=readJSON('puzzle2048_'+user.name);
+    if(p2){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot puzzle"></span>2048 Puzzle <b>Lv ${escape(p2.level)}</b> · $${escape(p2.money)} · best ${escape(p2.best||0)}`;pl.appendChild(d);anyProgress=true;}
+    const fp=readJSON('farm_'+user.name);
+    if(fp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot farm"></span>Farm Sim <b>Lv ${escape(fp.level)}</b> · $${escape(fp.money)} · ${escape(fp.harvests||0)} harvests`;pl.appendChild(d);anyProgress=true;}
+    const gp=readJSON('gyani_'+user.name);
+    if(gp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot gyani"></span>Gyani <b>स्तर ${escape((gp.stage||0)+1)}</b> · ₹${escape(gp.money||0)} · 🔥${escape(gp.streak||0)} streak`;pl.appendChild(d);anyProgress=true;}
   }catch(e){}
   if(!anyProgress)pl.textContent='No progress yet. Play a game to get started.';
   renderGames($('glist'),DEFAULT_GAMES);

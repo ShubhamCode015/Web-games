@@ -28,6 +28,10 @@ button.mini{width:auto;padding:7px 12px;font-size:13px;margin:0;background:#3a3a
 .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
 .dot.race{background:#22c55e;box-shadow:0 0 8px #22c55e}
 .dot.box{background:#ef4444;box-shadow:0 0 8px #ef4444}
+.dot.hill{background:#f97316;box-shadow:0 0 8px #f97316}
+.dot.puzzle{background:#eab308;box-shadow:0 0 8px #eab308}
+.dot.farm{background:#84cc16;box-shadow:0 0 8px #84cc16}
+.dot.gyani{background:#f5c542;box-shadow:0 0 8px #f5c542}
 .small{font-size:12px;color:var(--muted);line-height:1.5}
 .hidden{display:none}
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
