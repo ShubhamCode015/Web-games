@@ -3,50 +3,67 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Boxing</title>
+<title>Boxing 2D</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 </head>
 <body>
 <div id="wrap">
-  <canvas id="c" width="360" height="480"></canvas>
+  <canvas id="c" width="360" height="540"></canvas>
 
   <div id="menu" class="overlay">
-    <h2>Boxing</h2>
-    <p id="userinfo"></p>
-    <p>Level <b id="mlevel"></b> | XP <span id="mxp"></span>/<span id="mneed"></span></p>
-    <p>Money: <b id="mmoney"></b></p>
-    <p id="mstats" class="small"></p>
-    <button id="fight">Fight</button>
-    <button id="fighters">Fighters</button>
-    <button id="missions">Missions</button>
-    <button id="home" class="alt">Home</button>
-    <p class="small">Keys: 5 Punch · 8 Block · 0 Skill</p>
+    <div class="title-kicker">CHAMPIONSHIP BOUT</div>
+    <h2 class="title">BOXING <span>2D</span></h2>
+    <p id="userinfo" class="userinfo"></p>
+    <div class="statline">
+      <span class="statpill gold">LV <b id="mlevel"></b></span>
+      <span class="statpill">XP <b id="mxp"></b>/<b id="mneed"></b></span>
+      <span class="statpill money">$ <b id="mmoney"></b></span>
+    </div>
+    <div class="bar xpbar"><i id="mxpfill"></i></div>
+    <p id="mstats" class="small record"></p>
+    <button id="fight" class="big glowred">FIST FIGHT!</button>
+    <div class="btnrow">
+      <button id="fighters">Fighters</button>
+      <button id="missions">Missions</button>
+    </div>
+    <div class="btnrow">
+      <button id="muteMenu" class="alt">Sound: On</button>
+      <button id="home" class="alt">Home</button>
+    </div>
+    <p class="small keys">4 Jab &middot; 6 Cross &middot; 1 Hook &middot; 3 Uppercut &middot; 2/8 Block &middot; &larr;/&rarr; Step</p>
   </div>
 
-  <div id="fghv" class="overlay hidden">
+  <div id="fghv" class="overlay hidden sub">
     <h2>Fighters</h2>
     <div id="flist" class="list"></div>
     <button id="back1">Back</button>
   </div>
 
-  <div id="missv" class="overlay hidden">
+  <div id="missv" class="overlay hidden sub">
     <h2>Missions</h2>
     <div id="mlist" class="list"></div>
     <button id="back2">Back</button>
   </div>
 
-  <div id="over" class="overlay hidden">
+  <div id="over" class="overlay hidden center">
     <h2 id="otitle">Result</h2>
-    <p id="otext"></p>
-    <button id="retry">Fight Again</button>
-    <button id="menu2">Menu</button>
+    <div id="otext" class="otext"></div>
+    <button id="retry" class="big glowred">Fight Again</button>
+    <button id="menu2" class="alt">Menu</button>
   </div>
 
   <div id="controls" class="controls hidden">
-    <button id="btnBlock" class="ctrl blk">BLOCK<br><small>8</small></button>
-    <button id="btnPunch" class="ctrl pch">PUNCH<br><small>5</small></button>
-    <button id="btnSkill" class="ctrl skl">SKILL<br><small>0</small></button>
+    <div class="cleft">
+      <button id="btnJab" class="ctrl jab">JAB<br><small>4</small></button>
+      <button id="btnCross" class="ctrl cross">CROSS<br><small>6</small></button>
+      <button id="btnSpecial" class="ctrl skl">SPECIAL<br><small>3</small></button>
+    </div>
+    <div class="cright">
+      <button id="btnLeft" class="ctrl move">&#9664;<br><small>STEP</small></button>
+      <button id="btnBlock" class="ctrl blk">BLOCK<br><small>2/8</small></button>
+      <button id="btnRight" class="ctrl move">&#9654;<br><small>STEP</small></button>
+    </div>
   </div>
 </div>
 <script src="game.js"></script>
