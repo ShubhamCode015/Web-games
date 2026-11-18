@@ -2,52 +2,82 @@
 <html lang="en" manifest="../../manifest.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Racing</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Racing 2D</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="../../icon.svg" type="image/svg+xml">
 </head>
 <body>
 <div id="wrap">
-  <canvas id="c" width="320" height="480"></canvas>
+  <canvas id="c" width="360" height="540"></canvas>
+
   <div id="hud" class="hud hidden">
-    <span id="hlevel"></span>
-    <span id="hscore"></span>
-    <span id="hmny"></span>
+    <div class="hrow">
+      <span id="hdist">0 m</span>
+      <span><b id="hcoins">0</b> coins</span>
+      <span>₹<b id="hmny">0</b></span>
+      <button id="hmute" class="hbtn" title="Sound (M)">🔊</button>
+      <button id="hpause" class="hbtn" title="Pause (P)">⏸</button>
+    </div>
+    <div class="hrow">
+      <div id="pips" title="Damage">
+        <span class="pip on"></span><span class="pip on"></span><span class="pip on"></span>
+      </div>
+      <div class="nitro"><label>NITRO</label><div class="nbar"><i id="nitrofill"></i></div></div>
+      <span id="hlevel">Lv1</span>
+    </div>
   </div>
+
   <div id="menu" class="overlay">
-    <h2>Racing</h2>
+    <h1>RACING<span>2 D</span></h1>
     <p id="userinfo"></p>
-    <p>Level <b id="mlevel"></b> | XP <span id="mxp"></span>/<span id="mneed"></span></p>
-    <p>Money: <b id="mmoney"></b></p>
+    <p>Level <b id="mlevel"></b> · XP <span id="mxp"></span>/<span id="mneed"></span></p>
+    <div class="xpwrap"><i id="mxpfill"></i></div>
+    <div class="statsline"><span>₹<b id="mmoney"></b></span><span>Best <b id="mbest"></b> m</span></div>
     <p id="mcar" class="carline"></p>
     <button id="start">Start Race</button>
     <button id="shop">Vehicles</button>
     <button id="missions">Missions</button>
+    <button id="mute" class="alt">Sound: On</button>
     <button id="home" class="alt">Home</button>
-    <p class="small">Controls: Left/Right arrows · P = pause · Sound on</p>
+    <p class="small">4/6 or ◀ ▶ steer · 2 boost · 8 brake · P pause · M sound</p>
   </div>
+
   <div id="shopv" class="overlay hidden">
-    <h2>Vehicles</h2>
+    <h2>VEHICLES</h2>
     <div id="vlist"></div>
     <button id="back1">Back</button>
   </div>
+
   <div id="missv" class="overlay hidden">
-    <h2>Missions</h2>
+    <h2>MISSIONS</h2>
     <div id="mlist"></div>
     <button id="back2">Back</button>
   </div>
+
   <div id="over" class="overlay hidden">
-    <h2>Crash!</h2>
-    <p>Distance: <b id="odist"></b></p>
-    <p>Earned: <b id="oearn"></b></p>
+    <h2>CRASHED!</h2>
+    <p>Distance: <b id="odist">0</b> m</p>
+    <p>Coins: <b id="ocoins">0</b> · Earned: <b>₹<span id="oearn">0</span></b></p>
+    <p>Best: <b id="obest">0</b> m <span id="onewbest" class="newbest hidden">NEW BEST!</span></p>
     <button id="retry">Retry</button>
-    <button id="menu2">Menu</button>
+    <button id="menu2" class="alt">Menu</button>
   </div>
+
+  <div id="pausev" class="overlay hidden">
+    <h2>PAUSED</h2>
+    <button id="resume">Resume</button>
+    <button id="restart">Restart Race</button>
+    <button id="quit" class="alt">Quit to Menu</button>
+  </div>
+
   <div id="touch" class="touch hidden">
-    <button id="tleft">◀</button>
-    <button id="tright">▶</button>
+    <button id="tleft" aria-label="Steer left">◀</button>
+    <button id="tnitro" aria-label="Nitro boost">N₂O</button>
+    <button id="tright" aria-label="Steer right">▶</button>
   </div>
+
+  <div id="toast" class="toast hidden"></div>
 </div>
 <script src="game.js"></script>
 </body>
