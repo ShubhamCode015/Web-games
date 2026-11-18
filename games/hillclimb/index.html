@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" manifest="../../manifest.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b0b12">
+<title>Hill Climb</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c" width="360" height="540"></canvas>
+  <div id="hud" class="hud hidden">
+    <span id="hlevel">Lv1</span>
+    <span id="hdist">0m</span>
+    <span id="hcoins">0</span>
+    <span id="hmny">$0</span>
+    <div id="fuelbar" class="hudfuel"><i id="hfuel"></i></div>
+  </div>
+  <button id="mutebtn" title="Mute (M)">&#128266;</button>
+  <div id="menu" class="overlay">
+    <h2>Hill Climb</h2>
+    <p id="userinfo"></p>
+    <p>Level <b id="mlevel"></b> | XP <span id="mxp"></span>/<span id="mneed"></span></p>
+    <p>Money: <b id="mmoney"></b></p>
+    <p>Best: <b id="mbest"></b> m</p>
+    <button id="start">Start Engine</button>
+    <button id="upgrades">Upgrades</button>
+    <button id="missions">Missions</button>
+    <button id="home" class="alt">Home</button>
+    <p class="small">&larr; brake &middot; &rarr; gas &middot; P pause &middot; M mute</p>
+  </div>
+  <div id="upv" class="overlay hidden">
+    <h2>Upgrades</h2>
+    <p id="upmoney" class="carline"></p>
+    <div id="ulist"></div>
+    <button id="back1">Back</button>
+  </div>
+  <div id="missv" class="overlay hidden">
+    <h2>Missions</h2>
+    <div id="mlist"></div>
+    <button id="back2">Back</button>
+  </div>
+  <div id="over" class="overlay hidden">
+    <h2 id="otitle">Wrecked!</h2>
+    <p>Distance: <b id="odist"></b> m</p>
+    <p>Best: <b id="obest"></b> m</p>
+    <p>Coins: <b id="ocoins"></b></p>
+    <p>Earned: <b id="oearn"></b></p>
+    <button id="retry">Retry</button>
+    <button id="menu2">Menu</button>
+  </div>
+  <div id="touch" class="touch hidden">
+    <button id="tbrake">&#9664;<br>BRAKE</button>
+    <button id="tgas">GAS<br>&#9654;</button>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
