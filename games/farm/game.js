@@ -498,11 +498,11 @@ function bindClick(id,fn){
   const el=$(id);if(!el)return;
   el.addEventListener('click',fn);
 }
-bindClick('play',()=>{unlockAudio();sfxClick();show(null);startMusic();updateHud();});
+bindClick('play',()=>{unlockAudio();sfxClick();show(null);$('farm').classList.remove('hidden');startMusic();updateHud();});
 bindClick('missions',()=>{unlockAudio();sfxClick();renderMissions();show('missv');});
 bindClick('back2',()=>{unlockAudio();sfxClick();updateMenu();show('menu');});
 bindClick('home',()=>{stopMusic();location.href='../../index.html';});
-bindClick('menuBtn',()=>{unlockAudio();sfxClick();stopMusic();updateMenu();show('menu');});
+bindClick('menuBtn',()=>{unlockAudio();sfxClick();stopMusic();updateMenu();$('farm').classList.add('hidden');show('menu');});
 bindClick('waterTool',()=>{unlockAudio();waterMode=!waterMode;$('waterTool').classList.toggle('active',waterMode);sfxClick();toast(waterMode?'💧 Tap a growing plot to water it':'Watering can off');});
 bindClick('unlockTool',()=>{unlockAudio();unlockNextPlot();});
 bindClick('muteFarm',toggleMute);
