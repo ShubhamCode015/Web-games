@@ -6,13 +6,13 @@ body{background:radial-gradient(120% 90% at 50% 0%,#14231a,#05060a 70%);color:#e
 }
 .hud{position:absolute;top:6px;left:6px;right:6px;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12px;font-weight:700;background:rgba(8,14,10,.66);border:1px solid rgba(255,255,255,.08);padding:5px 8px;border-radius:8px;backdrop-filter:blur(4px)}
 .iconbtn{min-width:0;width:38px;height:38px;padding:0;font-size:17px;border-radius:8px;background:rgba(255,255,255,.08)}
-#farm{position:absolute;inset:0;display:flex;flex-direction:column;padding:44px 10px 10px;gap:8px;background:radial-gradient(130% 100% at 50% 0%,#1b3324 0%,#122017 55%,#0c1410 100%)}
+#farm{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;padding:44px 10px 10px;gap:8px;background:radial-gradient(130% 100% at 50% 0%,#1b3324 0%,#122017 55%,#0c1410 100%)}
 .xpwrap{display:flex;align-items:center;gap:8px}
 .xptext{font-size:10px;color:#9fdcb0;font-weight:700;min-width:64px;text-align:right}
 .xpbar{height:8px}
 .menubar{width:78%;margin:0 auto}
-#grid{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:8px;min-height:0}
-.plot{position:relative;min-width:0;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 50% 36%,#4d3620,#332214 72%);display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;overflow:hidden;transition:box-shadow .2s;box-shadow:inset 0 -8px 14px rgba(0,0,0,.4),inset 0 3px 6px rgba(255,255,255,.06)}
+#grid{flex:1;display:flex;flex-wrap:wrap;min-height:0;margin:-4px;align-content:stretch}
+.plot{position:relative;width:calc(25% - 8px);height:calc(33.33% - 5.5px);margin:4px;min-width:0;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 50% 36%,#4d3620,#332214 72%);display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;overflow:hidden;transition:box-shadow .2s;box-shadow:inset 0 -8px 14px rgba(0,0,0,.4),inset 0 3px 6px rgba(255,255,255,.06)}
 .plot.empty{background:repeating-linear-gradient(45deg,#241a12 0,#241a12 7px,#2d2115 7px,#2d2115 14px);border:1px dashed rgba(255,255,255,.16)}
 .plot.empty::after{content:'＋';position:absolute;color:rgba(255,255,255,.13);font-size:26px;font-weight:700}
 .plot.growing{border-color:rgba(120,200,120,.25)}
