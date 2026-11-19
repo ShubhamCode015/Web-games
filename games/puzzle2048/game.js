@@ -261,9 +261,10 @@ function doMove(dir){
   const merges=[];
   const consumed=[];
   const newMap=new Array(16).fill(null);
-  for(const line of lines){
+  for(let li=0;li<lines.length;li++){
+    const line=lines[li];
     const seq=[];
-    for(const p of line){const t=cellMap[p.r*4+p.c];if(t)seq.push(t);}
+    for(let pi=0;pi<line.length;pi++){const p=line[pi];const t=cellMap[p.r*4+p.c];if(t)seq.push(t);}
     let w=0;
     for(let i=0;i<seq.length;i++){
       const t=seq[i];
@@ -448,7 +449,7 @@ window.addEventListener('keydown',e=>{
   }
 });
 window.addEventListener('resize',()=>{
-  for(const id in tileEls){
+  for(let id in tileEls){
     const el=tileEls[id];
     const t=findTileById(+id);
     if(t)applyTileGeom(t);

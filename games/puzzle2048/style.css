@@ -90,3 +90,13 @@ button:disabled{background:#2d3142;color:#7c8199;cursor:default}
   .overlay h2{font-size:20px}
 }
 
+@supports not (gap: 1px) {
+  #wrap > * + * { margin-top: 10px; }
+  #topbar > * + * { margin-left: 8px; }
+  #hud > * + * { margin-left: 8px; }
+  #gameFooter > * + * { margin-left: 8px; }
+  .fbtns > * + * { margin-left: 8px; }
+  .overlay > * + * { margin-top: 9px; }
+  #mlist > * + * { margin-top: 8px; }
+}
+
