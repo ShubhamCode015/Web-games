@@ -161,10 +161,11 @@ function renderGames(gl,games){
   if(!gl)return;
   gl.innerHTML='';
   games.forEach(g=>{
-    const el=document.createElement('div');
+    const url=gameUrl(g.path);
+    const el=document.createElement(url?'a':'div');
     el.className='game';
+    if(url)el.href=url;
     el.innerHTML=`<div class="gicon">${escape(g.icon||'🎮')}</div><div class="gtitle">${escape(g.title)}</div><div class="gdesc small">${escape(g.desc||'')}</div>`;
-    el.onclick=()=>{const url=gameUrl(g.path);if(url)location.href=url;};
     gl.appendChild(el);
   });
   const empty=$('empty');

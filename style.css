@@ -19,9 +19,10 @@ button.mini{width:auto;padding:7px 12px;font-size:13px;margin:0;background:#3a3a
 .thumb.initial{display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#cfe0ff;background:linear-gradient(180deg,#2b3b66,#1b2744)}
 .avatar-pick{display:flex;align-items:center;gap:12px;margin-bottom:6px}
 .games{display:flex;flex-wrap:wrap;margin:-5px}
-.game{position:relative;width:calc(50% - 10px);margin:5px;background:linear-gradient(160deg,#26263b,#171724);border:1px solid rgba(255,255,255,.08);padding:14px 12px;border-radius:14px;text-align:center;cursor:pointer;transition:transform .1s,border-color .2s}
+.game{position:relative;display:block;width:calc(50% - 10px);margin:5px;background:linear-gradient(160deg,#26263b,#171724);border:1px solid rgba(255,255,255,.08);padding:14px 12px;border-radius:14px;text-align:center;cursor:pointer;transition:transform .1s,border-color .2s;color:inherit;text-decoration:none;font-family:inherit;-webkit-tap-highlight-color:transparent}
 .game:hover{border-color:rgba(59,130,246,.6);transform:translateY(-2px)}
 .game:active{transform:scale(.98)}
+.game:focus{outline:3px solid #60a5fa;outline-offset:2px;border-color:rgba(96,165,250,.95);transform:translateY(-2px);box-shadow:0 0 0 3px rgba(59,130,246,.2),0 8px 22px rgba(0,0,0,.35)}
 .gicon{font-size:34px;line-height:1;margin-bottom:6px}
 .gtitle{font-weight:800;font-size:15px}
 .gdesc{font-size:11px;margin-top:3px;line-height:1.3}
