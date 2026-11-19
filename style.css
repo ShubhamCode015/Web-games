@@ -1,7 +1,10 @@
 *{box-sizing:border-box;margin:0;padding:0}
+#brandbar{position:relative;width:100%;max-width:440px;text-align:center;font-size:11px;letter-spacing:.4px;color:#8f93ad;padding:8px 12px 0;font-weight:600}
+#brandbar .sep{color:#4a4d66;margin:0 4px}
+#brandbar .madeby{color:#c9b678;font-weight:800}
 :root{--bg:#0b0b12;--card:#171725;--card2:#20202f;--txt:#f2f3f8;--muted:#9a9db3;--blue:#3b82f6}
 html,body{min-height:100%}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(120% 80% at 50% 0%,#1a1a2e,#0b0b12 70%);color:var(--txt);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(120% 80% at 50% 0%,#1a1a2e,#0b0b12 70%);color:var(--txt);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 #app{width:100%;max-width:440px;padding:16px}
 .card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 h1{font-size:19px;margin-bottom:10px;letter-spacing:.2px}

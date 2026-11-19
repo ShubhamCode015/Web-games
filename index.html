@@ -8,8 +8,24 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
+<script>
+window.addEventListener('error',function(e){
+  try{
+    var d=document.getElementById('errbox');
+    if(!d){
+      d=document.createElement('div');
+      d.id='errbox';
+      d.setAttribute('role','alert');
+      d.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#7f1d1d;color:#fff;font:12px/1.4 system-ui,sans-serif;padding:8px 10px;max-height:45%;overflow:auto';
+      (document.body||document.documentElement).appendChild(d);
+    }
+    d.textContent='Error: '+((e&&e.message)||'unknown error — please reload');
+  }catch(_){}
+},true);
+</script>
 </head>
 <body>
+<div id="brandbar">🎮 Web Games <span class="sep">·</span> <span class="madeby">Made by Shubham Trivedi</span></div>
 <div id="app">
   <div class="card">
     <h1>Loading…</h1>
