@@ -533,13 +533,13 @@ function difficulty(){
   const fn=fightNumber();
   return {
     fn:fn,
-    aggression:Math.min(0.9,0.34+fn*0.055),
-    blockChance:Math.min(0.52,0.07+fn*0.045),
-    windTime:Math.max(0.30,0.62-fn*0.032),
-    moveSpeed:Math.min(168,96+fn*8),
-    cooldown:Math.max(0.62,1.55-fn*0.085),
-    dmgBase:Math.min(13.5,4.2+fn*0.62),
-    regen:Math.min(23,14+fn*0.8)
+    aggression:Math.min(0.92,0.48+fn*0.045),
+    blockChance:Math.min(0.6,0.12+fn*0.04),
+    windTime:Math.max(0.26,0.58-fn*0.03),
+    moveSpeed:Math.min(178,112+fn*7),
+    cooldown:Math.max(0.55,1.38-fn*0.085),
+    dmgBase:Math.min(15.5,5.5+fn*0.65),
+    regen:Math.min(24,15+fn*0.8)
   };
 }
 function newCombatant(isPlayer,x,name){
