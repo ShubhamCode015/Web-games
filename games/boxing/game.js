@@ -142,7 +142,7 @@ function checkMissions(){
 
 const $=id=>document.getElementById(id);
 const canvas=$('c');
-const ctx=canvas.getContext('2d');
+let ctx=canvas.getContext('2d');
 const W=canvas.width,H=canvas.height;
 const FEET=470;
 const LOW_GFX=/KAIOS/i.test(navigator.userAgent||'')||((window.innerWidth||999)<=320)||((window.innerHeight||999)<=380);
@@ -1495,6 +1495,20 @@ function drawBoxer(o){
 }
 
 /* ---------- Scene ---------- */
+let arenaBg=null;
+function buildArenaBg(){
+  if(arenaBg)return;
+  const bg=document.createElement('canvas');
+  bg.width=W;bg.height=H;
+  const g=bg.getContext('2d');
+  const prev=ctx;
+  ctx=g;
+  drawArena(0,0);
+  drawRing();
+  drawBackPostsRopes();
+  ctx=prev;
+  arenaBg=bg;
+}
 function draw(){
   const tsec=performance.now()/1000;
   const f=fighter();
@@ -1508,9 +1522,14 @@ function draw(){
   if(fight.shake>0)ctx.translate((Math.random()-0.5)*fight.shake,(Math.random()-0.5)*fight.shake);
   ctx.translate(W/2,focusY);ctx.scale(zoom,zoom);ctx.translate(-focusX,-focusY);
 
-  drawArena(tsec,fight.crowdWave);
-  drawRing();
-  drawBackPostsRopes();
+  if(LOW_GFX){
+    buildArenaBg();
+    ctx.drawImage(arenaBg,0,0);
+  }else{
+    drawArena(tsec,fight.crowdWave);
+    drawRing();
+    drawBackPostsRopes();
+  }
 
   // shadows
   const pSquash=p.fallen?0.75:1,eSquash=e.fallen?0.75:1;

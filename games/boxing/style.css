@@ -87,3 +87,16 @@ button:focus{outline:3px solid #60a5fa;outline-offset:2px;box-shadow:0 0 0 3px r
   .ctrl{font-size:9px}
   .ctrl.move{flex:0.55 1 0}
 }
+
+@supports not (gap: 1px) {
+  .overlay > * + * { margin-top: 8px; }
+  .statline > * + * { margin-left: 6px; }
+  .btnrow > * + * { margin-left: 8px; }
+  .list > * + * { margin-top: 6px; }
+  .fhead > * + * { margin-left: 8px; }
+  .fstats > * + * { margin-top: 3px; }
+  .fstat > * + * { margin-left: 6px; }
+  .controls > * + * { margin-left: 6px; }
+  .cleft > * + * { margin-left: 4px; }
+  .cright > * + * { margin-left: 4px; }
+}
