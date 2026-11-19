@@ -30,7 +30,9 @@ button:focus{outline:3px solid #60a5fa;outline-offset:2px;box-shadow:0 0 0 1px #
 button.alt{background:#3b3f52;box-shadow:none}
 button:disabled{background:#2d3142;color:#7c8199;cursor:default;box-shadow:none}
 .small{font-size:10px;color:#8d92a8;text-align:center}
-.hidden{display:none}
+.hidden{display:none !important}
+.touch.hidden{display:none !important}
+.hud.hidden{display:none !important}
 .toast{position:absolute;left:50%;bottom:96px;transform:translateX(-50%) translateY(8px);z-index:30;background:rgba(10,12,24,.92);border:1px solid rgba(96,165,250,.5);color:#dbe9ff;font-size:12px;font-weight:600;padding:8px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:86%;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.45)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 

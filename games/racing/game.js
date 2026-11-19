@@ -1260,7 +1260,7 @@ function laneFree(wx,zMin){
   return true;
 }
 function spawnEnemy(){
-  const diff=clamp(race.dist/2400,0,1);
+  const diff=clamp(race.dist/1700,0,1);
   const t=pickTrafficType();
   const order=[0,1,2].sort(()=>Math.random()-0.5);
   let lane=order[0];
@@ -1271,7 +1271,7 @@ function spawnEnemy(){
   enemies.push({
     wx:LANES_W[lane]+(Math.random()-0.5)*0.08,
     z:VIEW-2+Math.random()*6,
-    spd:t.spdMin+Math.random()*(t.spdMax-t.spdMin)+diff*1.6,
+    spd:t.spdMin+Math.random()*(t.spdMax-t.spdMin)+diff*2.4,
     color:CAR_COLORS[Math.floor(Math.random()*CAR_COLORS.length)],
     type:t.type,len:t.len,wdt:t.wdt,hitFlash:0
   });
@@ -1281,7 +1281,7 @@ function spawnPickup(){
   pickups.push({wx:LANES_W[Math.floor(Math.random()*3)]+(Math.random()-0.5)*0.1,z:VIEW-2,kind:isNitro?'nitro':'coin',seed:Math.random()*10});
 }
 function spawnObstacle(){
-  const diff=clamp(race.dist/2400,0,1);
+  const diff=clamp(race.dist/1700,0,1);
   const barrier=Math.random()<0.3+diff*0.15;
   const lane=Math.floor(Math.random()*3);
   obstacles.push({wx:LANES_W[lane]+(Math.random()-0.5)*0.06,z:VIEW-2,type:barrier?'barrier':'cone',seed:Math.random()*10});
@@ -1323,7 +1323,7 @@ function floatText(x,y,text,color){
 /* ---------- Update ---------- */
 function update(dt){
   const v=vehicle();
-  const diff=clamp(race.dist/2400,0,1);
+  const diff=clamp(race.dist/1700,0,1);
   const braking=held.brake;
   const wantNitro=(held.boost||touchBoost)&&race.nitro>0;
   if(wantNitro){race.nitro=Math.max(0,race.nitro-38*dt);race.boost=Math.max(race.boost,1.0);}
@@ -1356,11 +1356,11 @@ function update(dt){
   player.tilt+=((steer*0.34+(player.spin>0?player.spinDir*0.7:0))-player.tilt)*Math.min(1,dt*8);
 
   race.spawnT-=dt;
-  if(race.spawnT<=0){spawnEnemy();race.spawnT=1.12-0.58*diff+Math.random()*0.35;}
+  if(race.spawnT<=0){spawnEnemy();race.spawnT=0.72-0.40*diff+Math.random()*0.28;}
   race.pickupT-=dt;
   if(race.pickupT<=0){spawnPickup();race.pickupT=2.1+Math.random()*2.6;}
   race.obstT-=dt;
-  if(race.obstT<=0){spawnObstacle();race.obstT=Math.max(1.05,2.6-1.35*diff)+Math.random()*0.9;}
+  if(race.obstT<=0){spawnObstacle();race.obstT=Math.max(0.72,2.05-1.25*diff)+Math.random()*0.7;}
 
   const rel=race.speed*2.4;
   for(let i=enemies.length-1;i>=0;i--){
