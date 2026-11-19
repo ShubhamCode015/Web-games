@@ -288,16 +288,35 @@ function bindPress(el,fn){
 function bindClick(id,fn){bindPress($(id),fn);}
 
 /* ---------- Game flow ---------- */
-var currentQ=null,askedIds=[],answered=false,questionStart=0;
+var currentQ=null,askedIds=[],askedSet={},answered=false,questionStart=0;
 var timerTotal=45,timerLeft=45,timerInt=null,lastBeat=99;
 
-function askedRemember(id){askedIds.push(id);if(askedIds.length>30)askedIds.shift();}
+function askedRemember(id){
+  askedIds.push(id);
+  askedSet[id]=true;
+  // when almost the whole bank has been asked this session, reset so high tiers never starve
+  var uniqueCount=0;
+  for(var k in askedSet){if(askedSet[k])uniqueCount++;}
+  if(uniqueCount>=QUESTIONS.length-50){askedSet={};}
+  if(askedIds.length>4000)askedIds.shift();
+}
+function questionsOfTier(tier){
+  return Q_BY_TIER[tier]||[];
+}
 function pickQuestion(tier){
   if(!QUESTIONS.length)return null;
-  var pool=QUESTIONS.filter(function(q){return q.d<=tier&&askedIds.indexOf(q.id)<0;});
-  if(!pool.length)pool=QUESTIONS.filter(function(q){return q.d<=tier;});
-  if(!pool.length)pool=QUESTIONS;
-  return pool[Math.floor(Math.random()*pool.length)];
+  // prefer exact difficulty of the current tier; then neighbouring tiers (harder first, then easier)
+  var order=[tier,tier+1,tier-1,tier+2,tier-2,tier+3,tier-3,tier+4,tier-4];
+  for(var i=0;i<order.length;i++){
+    var t=order[i];
+    if(t<1||t>5)continue;
+    var pool=questionsOfTier(t).filter(function(q){return !askedSet[q.id];});
+    if(pool.length)return pool[Math.floor(Math.random()*pool.length)];
+  }
+  // everything in reach seen already: exact tier ignoring memory
+  var fallback=questionsOfTier(tier);
+  if(fallback.length)return fallback[Math.floor(Math.random()*fallback.length)];
+  return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
 }
 function updateHud(){
   $('hmny').textContent=state.money;
