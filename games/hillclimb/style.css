@@ -21,8 +21,9 @@ button:focus{outline:2px solid #ffd166;outline-offset:2px}
 button.alt{background:#3b3f52}
 button:disabled{background:#2d3142;color:#7c8199;cursor:default}
 .small{font-size:11px;color:#8d92a8}
-.hidden{display:none}
-.touch.hidden{display:none}
+.hidden{display:none !important}
+.touch.hidden{display:none !important}
+.hud.hidden{display:none !important}
 
 #ulist,#mlist{width:100%;display:flex;flex-direction:column;gap:8px}
 .uitem,.mitem{background:linear-gradient(160deg,#232940,#151a28);border:1px solid rgba(255,255,255,.07);padding:10px;border-radius:12px;width:100%;font-size:13px}

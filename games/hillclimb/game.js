@@ -216,15 +216,16 @@ function noise1(x){
   return hash1(i)*(1-u)+hash1(i+1)*u;
 }
 function elevRaw(x){
-  let e=Math.sin(x*0.0035+terrainSeed)*95
-       +Math.sin(x*0.0087+terrainSeed*1.7+2.1)*42
-       +Math.sin(x*0.021+terrainSeed*2.3+4.2)*11;
-  e+=(noise1(x*0.0016+terrainSeed*7)-0.5)*150;
-  e+=(noise1(x*0.0081+terrainSeed*13)-0.5)*34;
+  let e=Math.sin(x*0.0035+terrainSeed)*118
+       +Math.sin(x*0.0093+terrainSeed*1.7+2.1)*56
+       +Math.sin(x*0.021+terrainSeed*2.3+4.2)*17
+       +Math.sin(x*0.047+terrainSeed*3.1+1.3)*6;
+  e+=(noise1(x*0.0016+terrainSeed*7)-0.5)*175;
+  e+=(noise1(x*0.0081+terrainSeed*13)-0.5)*44;
   return e;
 }
 function elevAt(x){
-  const diff=Math.max(0.28,Math.min(1,0.28+Math.max(0,x)/2600));
+  const diff=Math.max(0.35,Math.min(1,0.35+Math.max(0,x)/2100));
   return elevRaw(x)*diff;
 }
 function groundY(x){return -elevAt(x);}
@@ -338,7 +339,7 @@ function resetCar(){
   car={x:0,y:gy-40,vx:0,vy:0,angle:0,angVel:0,wheelSpin:0,grounded:false,roofTimer:0,fuelEmptyT:0,
     wheels:[{x:-WHEEL_BASE/2,y:gy-10},{x:WHEEL_BASE/2,y:gy-10}],compression:[0,0]};
   routeCoins=[];canisters=[];dust=[];
-  nextCoinX=340;nextFuelX=900;
+  nextCoinX=340;nextFuelX=1150;
   camX=car.x-W*0.34;camY=car.y-H*0.55;
   runDist=0;runCoins=0;runEarned=0;
   fuelCap=tankCapacity();fuel=fuelCap;
@@ -402,14 +403,14 @@ function spawnAhead(){
   }
   while(nextFuelX<ahead){
     canisters.push({x:nextFuelX,y:groundY(nextFuelX)-26});
-    nextFuelX+=1600+Math.random()*900;
+    nextFuelX+=2300+Math.random()*1300;
   }
 }
 
 function updatePhysics(dt){
-  const eng=950*engineMult()*gripMult();
-  const suspK=95*suspensionMult();
-  const suspD=11*suspensionMult();
+  const eng=880*engineMult()*gripMult();
+  const suspK=78*suspensionMult();
+  const suspD=9*suspensionMult();
   const slope=slopeAt(car.x);
   const inv=1/Math.sqrt(1+slope*slope);
   const tx=inv,ty=slope*inv;
@@ -444,8 +445,8 @@ function updatePhysics(dt){
   car.grounded=grounded;
   if(grounded){
     const targetA=Math.atan(slope);
-    car.angVel+=normAngle(targetA-car.angle)*3.2*dt;
-    car.angVel-=car.angVel*2.2*dt;
+    car.angVel+=normAngle(targetA-car.angle)*1.55*dt;
+    car.angVel-=car.angVel*1.15*dt;
   }
 
   const gas=input.gas,brake=input.brake;
@@ -466,15 +467,15 @@ function updatePhysics(dt){
     }
   }
   if(!grounded){
-    if(gas)car.angVel-=2.1*dt;
-    else if(brake)car.angVel+=2.1*dt;
+    if(gas)car.angVel-=2.7*dt;
+    else if(brake)car.angVel+=2.7*dt;
   }
 
   car.vx-=car.vx*0.22*dt;
   car.vy-=car.vy*0.02*dt;
   const drag=0.0009*car.vx*Math.abs(car.vx);
   car.vx-=drag*dt;
-  car.angVel-=car.angVel*1.5*dt;
+  car.angVel-=car.angVel*1.0*dt;
   car.angle+=car.angVel*dt;
   car.angVel=Math.max(-9,Math.min(9,car.angVel));
 
@@ -492,7 +493,7 @@ function updatePhysics(dt){
   const roofY=car.y+rotY(0,-9,car.angle);
   if(Math.abs(normAngle(car.angle))>1.75&&roofY>=groundY(roofX)-2){
     car.roofTimer+=dt;
-    if(car.roofTimer>0.9){endRun('Wrecked!');return;}
+    if(car.roofTimer>0.75){endRun('Wrecked!');return;}
   }else{
     car.roofTimer=Math.max(0,car.roofTimer-dt*2);
   }
@@ -507,7 +508,7 @@ function updatePhysics(dt){
   }
 
   if(fuel>0){
-    fuel-=(1.15+(gas?1.55:0))*dt;
+    fuel-=(1.6+(gas?2.3:0))*dt;
     if(fuel<=0){fuel=0;tone(300,0.3,'sine',0.1,150);}
   }else{
     car.fuelEmptyT+=dt;
@@ -533,7 +534,7 @@ function update(dt){
   canisters=canisters.filter(c=>{
     const dx=c.x-carCX,dy=c.y-carCY;
     if(dx*dx+dy*dy<1100){
-      fuel=Math.min(fuelCap,fuel+fuelCap*0.55);
+      fuel=Math.min(fuelCap,fuel+fuelCap*0.4);
       car.fuelEmptyT=0;
       tone(520,0.16,'sine',0.11,840);
       setTimeout(()=>tone(700,0.14,'sine',0.09,1050),90);
