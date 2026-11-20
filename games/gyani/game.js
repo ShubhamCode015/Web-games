@@ -29,46 +29,106 @@ QUESTIONS.forEach(function(q){if(Q_BY_TIER[q.d])Q_BY_TIER[q.d].push(q);});
    animals in symbolic ascending order, then मानव, then Hindu wisdom titles.
    Never shown to player; player only sees current index + title. */
 var STAGES=[
-  {t:'फेरीफ्लाई ततैया',en:'Fairyfly Wasp · Dicopomorpha echmepterygis',baby:'🥚',adult:'🪰',size:'~0.139 मिमी',tier:1,need:440},
-  {t:'फेदरविंग भृंग',en:'Featherwing Beetle · Scydosella musawasensis',baby:'🐛',adult:'🪲',size:'~0.325 मिमी',tier:1,need:440},
-  {t:'पतू डिगुआ',en:'Patu digua — विश्व की सबसे छोटी मकड़ी',baby:'🕷️',adult:'🕷️',size:'~0.37 मिमी',tier:1,need:440},
-  {t:'केयरबारा चींटी',en:'Carebara bruni — विश्व की सबसे छोटी चींटी',baby:'🐜',adult:'🐜',size:'~1 मिमी',tier:1,need:440},
-  {t:'स्टिगमेला मॉथ',en:'Stigmella maya — विश्व का सबसे छोटा पतंगा',baby:'🐛',adult:'🦋',size:'~2.8 मिमी (पंख-फैलाव)',tier:1,need:440},
-  {t:'शिंडलेरिया मछली',en:'Schindleria brevipinguis — \'stout infantfish\'',baby:'🥚',adult:'🐟',size:'~6.5 मिमी',tier:1,need:440},
-  {t:'पैडोफाइनी मेंढक',en:'Paedophryne amauensis — विश्व का सबसे छोटा मेंढक',baby:'🥚',adult:'🐸',size:'~7.7 मिमी',tier:1,need:440},
-  {t:'पेडोसिप्रिस मछली',en:'Paedocypris progenetica — मीठे पानी की सबसे छोटी मछली',baby:'🐟',adult:'🐠',size:'~7.9 मिमी',tier:1,need:440},
-  {t:'नैनो कैमेलियन',en:'Brookesia nana — विश्व का सबसे छोटा सरीसृप',baby:'🦎',adult:'🦎',size:'~13.5 मिमी',tier:2,need:600},
-  {t:'बम्बलबी चमगादड़',en:'Bumblebee Bat · Craseonycteris thonglongyai',baby:'🦇',adult:'🦇',size:'~3.1 सेमी',tier:2,need:600},
-  {t:'एट्रुस्कन शेरू',en:'Etruscan Shrew · Suncus etruscus — सबसे छोटा स्तनधारी (भार से)',baby:'🐭',adult:'🐭',size:'~4.4 सेमी',tier:2,need:600},
-  {t:'बी हमिंगबर्ड',en:'Bee Hummingbird · Mellisuga helenae — विश्व का सबसे छोटा पक्षी',baby:'🥚',adult:'🐦',size:'~5.5 सेमी',tier:2,need:600},
-  {t:'स्पेक्ल्ड पैडलोपर',en:'Speckled Padloper · Homopus signatus — विश्व का सबसे छोटा कछुआ',baby:'🥚',adult:'🐢',size:'~8 सेमी',tier:2,need:600},
-  {t:'बार्बेडोस थ्रेडस्नेक',en:'Tetracheilostoma carlae — विश्व का सबसे छोटा साँप',baby:'🐍',adult:'🐍',size:'~10 सेमी',tier:2,need:600},
-  {t:'प्रवासी टिड्डा',en:'Migratory Locust · Locusta migratoria',baby:'🦗',adult:'🦗',size:'~8–11 सेमी',tier:2,need:600},
-  {t:'बंदर',en:'Rhesus Macaque · Macaca mulatta',baby:'🐵',adult:'🐒',size:'~53 सेमी',tier:2,need:600},
-  {t:'कुत्ता',en:'Canis lupus familiaris',baby:'🐶',adult:'🐕',size:'~70 सेमी',tier:3,need:900},
-  {t:'भेड़िया',en:'Canis lupus',baby:'🐺',adult:'🐺',size:'~1.1 मी',tier:3,need:900},
-  {t:'शेर',en:'Panthera leo — जंगल का राजा',baby:'🦁',adult:'🦁',size:'~1.8 मी',tier:3,need:900},
-  {t:'बाघ',en:'Panthera tigris',baby:'🐯',adult:'🐅',size:'~2.3 मी',tier:3,need:900},
-  {t:'घोड़ा',en:'Equus ferus caballus',baby:'🐴',adult:'🐎',size:'~2.4 मी',tier:3,need:900},
-  {t:'हाथी',en:'Elephas maximus / Loxodonta africana',baby:'🐘',adult:'🐘',size:'~3.3 मी',tier:3,need:900},
-  {t:'ब्लू व्हेल',en:'Blue Whale · Balaenoptera musculus',baby:'🐳',adult:'🐋',size:'~27 मी',tier:3,need:900},
-  {t:'मानव',en:'Homo sapiens — ज्ञान का शिखर',baby:'👶',adult:'🧑',size:'~1.7 मी',tier:4,need:1300},
-  {t:'विद्यार्थी',en:'विद्या की राह का प्रथम दीपक',baby:'🧒',adult:'🧑',size:'चरण 1',tier:4,need:1300},
-  {t:'शिष्य',en:'जो सीखने की लौ जलाता है',baby:'🙇',adult:'🧑',size:'चरण 2',tier:4,need:1300},
-  {t:'ज्ञानार्थी',en:'जो ज्ञान का अन्वेषक है',baby:'🧑',adult:'🧓',size:'चरण 3',tier:4,need:1300},
-  {t:'विद्वान',en:'जो शास्त्रों का ज्ञाता है',baby:'🧓',adult:'🧓',size:'चरण 4',tier:4,need:1300},
-  {t:'पंडित',en:'जो पाण्डित्य की प्रतिमा है',baby:'🙏',adult:'🙏',size:'चरण 5',tier:4,need:1300},
-  {t:'आचार्य',en:'जो सिखाता है, खुद सीखकर',baby:'🧎',adult:'🧘',size:'चरण 6',tier:4,need:1300},
-  {t:'उपाध्याय',en:'जो अर्ध-वेदों का आधिकारिक भाष्यकार है',baby:'🙏',adult:'🧘',size:'चरण 7',tier:4,need:1300},
-  {t:'साधु',en:'जो सत्य को ही अपनाता है',baby:'🙏',adult:'🧘',size:'चरण 8',tier:4,need:1300},
-  {t:'सन्त',en:'जो सर्वहित की साधना करता है',baby:'🧘',adult:'🧘',size:'चरण 9',tier:5,need:1800},
-  {t:'महात्मा',en:'जिसकी आत्मा महान है',baby:'🙏',adult:'🧘',size:'चरण 10',tier:5,need:1800},
-  {t:'तपस्वी',en:'जो तप द्वारा शुद्ध होता है',baby:'🧘',adult:'🧘',size:'चरण 11',tier:5,need:1800},
-  {t:'ऋषि',en:'दृष्टा — जिसने ऋचाएँ देखीं',baby:'🧘',adult:'🕉️',size:'चरण 12',tier:5,need:1800},
-  {t:'महर्षि',en:'महान दृष्टा — वेद के द्रष्टा',baby:'🧘',adult:'🕉️',size:'चरण 13',tier:5,need:1800},
-  {t:'ब्रह्मर्षि',en:'जो ब्रह्म में ही स्थित है',baby:'🕉️',adult:'🕉️',size:'चरण 14',tier:5,need:1800},
-  {t:'देवर्षि',en:'देवताओं के भी ऋषि — नारद की परम्परा',baby:'🙏',adult:'🕉️',size:'चरण 15',tier:5,need:1800},
-  {t:'पूर्ण ज्ञानस्वरूप',en:'ज्ञान ही स्वरूप — शिव के समान',baby:'🧘',adult:'🕉️',size:'चरम',tier:5,need:1800}
+  {t:'फेरीफ्लाई ततैया',en:'Fairyfly Wasp · Dicopomorpha echmepterygis',baby:'🥚',adult:'🪰',size:'~0.139 मिमी',tier:1,need:2200},
+  {t:'फेदरविंग भृंग',en:'Featherwing Beetle · Scydosella musawasensis',baby:'🐛',adult:'🪲',size:'~0.325 मिमी',tier:1,need:2200},
+  {t:'पतू डिगुआ',en:'Patu digua — विश्व की सबसे छोटी मकड़ी',baby:'🕷️',adult:'🕷️',size:'~0.37 मिमी',tier:1,need:2200},
+  {t:'केयरबारा चींटी',en:'Carebara bruni — विश्व की सबसे छोटी चींटी',baby:'🐜',adult:'🐜',size:'~1 मिमी',tier:1,need:2200},
+  {t:'स्टिगमेला मॉथ',en:'Stigmella maya — विश्व का सबसे छोटा पतंगा',baby:'🐛',adult:'🦋',size:'~2.8 मिमी (पंख-फैलाव)',tier:1,need:2200},
+  {t:'शिंडलेरिया मछली',en:'Schindleria brevipinguis — \'stout infantfish\'',baby:'🥚',adult:'🐟',size:'~6.5 मिमी',tier:1,need:2200},
+  {t:'पैडोफाइनी मेंढक',en:'Paedophryne amauensis — विश्व का सबसे छोटा मेंढक',baby:'🥚',adult:'🐸',size:'~7.7 मिमी',tier:1,need:2200},
+  {t:'पेडोसिप्रिस मछली',en:'Paedocypris progenetica — मीठे पानी की सबसे छोटी मछली',baby:'🐟',adult:'🐠',size:'~7.9 मिमी',tier:1,need:2200},
+  {t:'नैनो कैमेलियन',en:'Brookesia nana — विश्व का सबसे छोटा सरीसृप',baby:'🦎',adult:'🦎',size:'~13.5 मिमी',tier:2,need:3000},
+  {t:'बम्बलबी चमगादड़',en:'Bumblebee Bat · Craseonycteris thonglongyai',baby:'🦇',adult:'🦇',size:'~3.1 सेमी',tier:2,need:3000},
+  {t:'एट्रुस्कन शेरू',en:'Etruscan Shrew · Suncus etruscus — सबसे छोटा स्तनधारी (भार से)',baby:'🐭',adult:'🐭',size:'~4.4 सेमी',tier:2,need:3000},
+  {t:'बी हमिंगबर्ड',en:'Bee Hummingbird · Mellisuga helenae — विश्व का सबसे छोटा पक्षी',baby:'🥚',adult:'🐦',size:'~5.5 सेमी',tier:2,need:3000},
+  {t:'स्पेक्ल्ड पैडलोपर',en:'Speckled Padloper · Homopus signatus — विश्व का सबसे छोटा कछुआ',baby:'🥚',adult:'🐢',size:'~8 सेमी',tier:2,need:3000},
+  {t:'बार्बेडोस थ्रेडस्नेक',en:'Tetracheilostoma carlae — विश्व का सबसे छोटा साँप',baby:'🐍',adult:'🐍',size:'~10 सेमी',tier:2,need:3000},
+  {t:'प्रवासी टिड्डा',en:'Migratory Locust · Locusta migratoria',baby:'🦗',adult:'🦗',size:'~8–11 सेमी',tier:2,need:3000},
+  {t:'बंदर',en:'Rhesus Macaque · Macaca mulatta',baby:'🐵',adult:'🐒',size:'~53 सेमी',tier:2,need:3000},
+  {t:'कुत्ता',en:'Canis lupus familiaris',baby:'🐶',adult:'🐕',size:'~70 सेमी',tier:3,need:4500},
+  {t:'भेड़िया',en:'Canis lupus',baby:'🐺',adult:'🐺',size:'~1.1 मी',tier:3,need:4500},
+  {t:'शेर',en:'Panthera leo — जंगल का राजा',baby:'🦁',adult:'🦁',size:'~1.8 मी',tier:3,need:4500},
+  {t:'बाघ',en:'Panthera tigris',baby:'🐯',adult:'🐅',size:'~2.3 मी',tier:3,need:4500},
+  {t:'घोड़ा',en:'Equus ferus caballus',baby:'🐴',adult:'🐎',size:'~2.4 मी',tier:3,need:4500},
+  {t:'हाथी',en:'Elephas maximus / Loxodonta africana',baby:'🐘',adult:'🐘',size:'~3.3 मी',tier:3,need:4500},
+  {t:'ब्लू व्हेल',en:'Blue Whale · Balaenoptera musculus',baby:'🐳',adult:'🐋',size:'~27 मी',tier:3,need:4500},
+  {t:'मानव',en:'Homo sapiens — ज्ञान का शिखर',baby:'👶',adult:'🧑',size:'~1.7 मी',tier:4,need:6500},
+  {t:'विद्यार्थी',en:'विद्या की राह का प्रथम दीपक',baby:'🧒',adult:'🧑',size:'चरण 1',tier:4,need:6500},
+  {t:'शिष्य',en:'जो सीखने की लौ जलाता है',baby:'🙇',adult:'🧑',size:'चरण 2',tier:4,need:6500},
+  {t:'ज्ञानार्थी',en:'जो ज्ञान का अन्वेषक है',baby:'🧑',adult:'🧓',size:'चरण 3',tier:4,need:6500},
+  {t:'विद्वान',en:'जो शास्त्रों का ज्ञाता है',baby:'🧓',adult:'🧓',size:'चरण 4',tier:4,need:6500},
+  {t:'पंडित',en:'जो पाण्डित्य की प्रतिमा है',baby:'🙏',adult:'🙏',size:'चरण 5',tier:4,need:6500},
+  {t:'आचार्य',en:'जो सिखाता है, खुद सीखकर',baby:'🧎',adult:'🧘',size:'चरण 6',tier:4,need:6500},
+  {t:'उपाध्याय',en:'जो अर्ध-वेदों का आधिकारिक भाष्यकार है',baby:'🙏',adult:'🧘',size:'चरण 7',tier:4,need:6500},
+  {t:'साधु',en:'जो सत्य को ही अपनाता है',baby:'🙏',adult:'🧘',size:'चरण 8',tier:4,need:6500},
+  {t:'सन्त',en:'जो सर्वहित की साधना करता है',baby:'🧘',adult:'🧘',size:'चरण 9',tier:5,need:9000},
+  {t:'महात्मा',en:'जिसकी आत्मा महान है',baby:'🙏',adult:'🧘',size:'चरण 10',tier:5,need:9000},
+  {t:'तपस्वी',en:'जो तप द्वारा शुद्ध होता है',baby:'🧘',adult:'🧘',size:'चरण 11',tier:5,need:9000},
+  {t:'ऋषि',en:'दृष्टा — जिसने ऋचाएँ देखीं',baby:'🧘',adult:'🕉️',size:'चरण 12',tier:5,need:9000},
+  {t:'महर्षि',en:'महान दृष्टा — वेद के द्रष्टा',baby:'🧘',adult:'🕉️',size:'चरण 13',tier:5,need:9000},
+  {t:'ब्रह्मर्षि',en:'जो ब्रह्म में ही स्थित है',baby:'🕉️',adult:'🕉️',size:'चरण 14',tier:5,need:9000},
+  {t:'देवर्षि',en:'देवताओं के भी ऋषि — नारद की परम्परा',baby:'🙏',adult:'🕉️',size:'चरण 15',tier:5,need:9000},
+  {t:'पूर्ण ज्ञानस्वरूप',en:'ज्ञान ही स्वरूप — शिव के समान',baby:'🧘',adult:'🕉️',size:'चरम',tier:5,need:9000},
+  {t:'ज्ञान चरण 41',en:'Wisdom Stage 41',baby:'🧘',adult:'🕉️',size:'चरण 41',tier:5,need:9000},
+  {t:'ज्ञान चरण 42',en:'Wisdom Stage 42',baby:'🧘',adult:'🕉️',size:'चरण 42',tier:5,need:9000},
+  {t:'ज्ञान चरण 43',en:'Wisdom Stage 43',baby:'🧘',adult:'🕉️',size:'चरण 43',tier:5,need:9000},
+  {t:'ज्ञान चरण 44',en:'Wisdom Stage 44',baby:'🧘',adult:'🕉️',size:'चरण 44',tier:5,need:9000},
+  {t:'ज्ञान चरण 45',en:'Wisdom Stage 45',baby:'🧘',adult:'🕉️',size:'चरण 45',tier:5,need:9000},
+  {t:'ज्ञान चरण 46',en:'Wisdom Stage 46',baby:'🧘',adult:'🕉️',size:'चरण 46',tier:5,need:9000},
+  {t:'ज्ञान चरण 47',en:'Wisdom Stage 47',baby:'🧘',adult:'🕉️',size:'चरण 47',tier:5,need:9000},
+  {t:'ज्ञान चरण 48',en:'Wisdom Stage 48',baby:'🧘',adult:'🕉️',size:'चरण 48',tier:5,need:9000},
+  {t:'ज्ञान चरण 49',en:'Wisdom Stage 49',baby:'🧘',adult:'🕉️',size:'चरण 49',tier:5,need:9000},
+  {t:'ज्ञान चरण 50',en:'Wisdom Stage 50',baby:'🧘',adult:'🕉️',size:'चरण 50',tier:5,need:9000},
+  {t:'ज्ञान चरण 51',en:'Wisdom Stage 51',baby:'🧘',adult:'🕉️',size:'चरण 51',tier:5,need:9000},
+  {t:'ज्ञान चरण 52',en:'Wisdom Stage 52',baby:'🧘',adult:'🕉️',size:'चरण 52',tier:5,need:9000},
+  {t:'ज्ञान चरण 53',en:'Wisdom Stage 53',baby:'🧘',adult:'🕉️',size:'चरण 53',tier:5,need:9000},
+  {t:'ज्ञान चरण 54',en:'Wisdom Stage 54',baby:'🧘',adult:'🕉️',size:'चरण 54',tier:5,need:9000},
+  {t:'ज्ञान चरण 55',en:'Wisdom Stage 55',baby:'🧘',adult:'🕉️',size:'चरण 55',tier:5,need:9000},
+  {t:'ज्ञान चरण 56',en:'Wisdom Stage 56',baby:'🧘',adult:'🕉️',size:'चरण 56',tier:5,need:9000},
+  {t:'ज्ञान चरण 57',en:'Wisdom Stage 57',baby:'🧘',adult:'🕉️',size:'चरण 57',tier:5,need:9000},
+  {t:'ज्ञान चरण 58',en:'Wisdom Stage 58',baby:'🧘',adult:'🕉️',size:'चरण 58',tier:5,need:9000},
+  {t:'ज्ञान चरण 59',en:'Wisdom Stage 59',baby:'🧘',adult:'🕉️',size:'चरण 59',tier:5,need:9000},
+  {t:'ज्ञान चरण 60',en:'Wisdom Stage 60',baby:'🧘',adult:'🕉️',size:'चरण 60',tier:5,need:9000},
+  {t:'ज्ञान चरण 61',en:'Wisdom Stage 61',baby:'🧘',adult:'🕉️',size:'चरण 61',tier:5,need:9000},
+  {t:'ज्ञान चरण 62',en:'Wisdom Stage 62',baby:'🧘',adult:'🕉️',size:'चरण 62',tier:5,need:9000},
+  {t:'ज्ञान चरण 63',en:'Wisdom Stage 63',baby:'🧘',adult:'🕉️',size:'चरण 63',tier:5,need:9000},
+  {t:'ज्ञान चरण 64',en:'Wisdom Stage 64',baby:'🧘',adult:'🕉️',size:'चरण 64',tier:5,need:9000},
+  {t:'ज्ञान चरण 65',en:'Wisdom Stage 65',baby:'🧘',adult:'🕉️',size:'चरण 65',tier:5,need:9000},
+  {t:'ज्ञान चरण 66',en:'Wisdom Stage 66',baby:'🧘',adult:'🕉️',size:'चरण 66',tier:5,need:9000},
+  {t:'ज्ञान चरण 67',en:'Wisdom Stage 67',baby:'🧘',adult:'🕉️',size:'चरण 67',tier:5,need:9000},
+  {t:'ज्ञान चरण 68',en:'Wisdom Stage 68',baby:'🧘',adult:'🕉️',size:'चरण 68',tier:5,need:9000},
+  {t:'ज्ञान चरण 69',en:'Wisdom Stage 69',baby:'🧘',adult:'🕉️',size:'चरण 69',tier:5,need:9000},
+  {t:'ज्ञान चरण 70',en:'Wisdom Stage 70',baby:'🧘',adult:'🕉️',size:'चरण 70',tier:5,need:9000},
+  {t:'ज्ञान चरण 71',en:'Wisdom Stage 71',baby:'🧘',adult:'🕉️',size:'चरण 71',tier:5,need:9000},
+  {t:'ज्ञान चरण 72',en:'Wisdom Stage 72',baby:'🧘',adult:'🕉️',size:'चरण 72',tier:5,need:9000},
+  {t:'ज्ञान चरण 73',en:'Wisdom Stage 73',baby:'🧘',adult:'🕉️',size:'चरण 73',tier:5,need:9000},
+  {t:'ज्ञान चरण 74',en:'Wisdom Stage 74',baby:'🧘',adult:'🕉️',size:'चरण 74',tier:5,need:9000},
+  {t:'ज्ञान चरण 75',en:'Wisdom Stage 75',baby:'🧘',adult:'🕉️',size:'चरण 75',tier:5,need:9000},
+  {t:'ज्ञान चरण 76',en:'Wisdom Stage 76',baby:'🧘',adult:'🕉️',size:'चरण 76',tier:5,need:9000},
+  {t:'ज्ञान चरण 77',en:'Wisdom Stage 77',baby:'🧘',adult:'🕉️',size:'चरण 77',tier:5,need:9000},
+  {t:'ज्ञान चरण 78',en:'Wisdom Stage 78',baby:'🧘',adult:'🕉️',size:'चरण 78',tier:5,need:9000},
+  {t:'ज्ञान चरण 79',en:'Wisdom Stage 79',baby:'🧘',adult:'🕉️',size:'चरण 79',tier:5,need:9000},
+  {t:'ज्ञान चरण 80',en:'Wisdom Stage 80',baby:'🧘',adult:'🕉️',size:'चरण 80',tier:5,need:9000},
+  {t:'ज्ञान चरण 81',en:'Wisdom Stage 81',baby:'🧘',adult:'🕉️',size:'चरण 81',tier:5,need:9000},
+  {t:'ज्ञान चरण 82',en:'Wisdom Stage 82',baby:'🧘',adult:'🕉️',size:'चरण 82',tier:5,need:9000},
+  {t:'ज्ञान चरण 83',en:'Wisdom Stage 83',baby:'🧘',adult:'🕉️',size:'चरण 83',tier:5,need:9000},
+  {t:'ज्ञान चरण 84',en:'Wisdom Stage 84',baby:'🧘',adult:'🕉️',size:'चरण 84',tier:5,need:9000},
+  {t:'ज्ञान चरण 85',en:'Wisdom Stage 85',baby:'🧘',adult:'🕉️',size:'चरण 85',tier:5,need:9000},
+  {t:'ज्ञान चरण 86',en:'Wisdom Stage 86',baby:'🧘',adult:'🕉️',size:'चरण 86',tier:5,need:9000},
+  {t:'ज्ञान चरण 87',en:'Wisdom Stage 87',baby:'🧘',adult:'🕉️',size:'चरण 87',tier:5,need:9000},
+  {t:'ज्ञान चरण 88',en:'Wisdom Stage 88',baby:'🧘',adult:'🕉️',size:'चरण 88',tier:5,need:9000},
+  {t:'ज्ञान चरण 89',en:'Wisdom Stage 89',baby:'🧘',adult:'🕉️',size:'चरण 89',tier:5,need:9000},
+  {t:'ज्ञान चरण 90',en:'Wisdom Stage 90',baby:'🧘',adult:'🕉️',size:'चरण 90',tier:5,need:9000},
+  {t:'ज्ञान चरण 91',en:'Wisdom Stage 91',baby:'🧘',adult:'🕉️',size:'चरण 91',tier:5,need:9000},
+  {t:'ज्ञान चरण 92',en:'Wisdom Stage 92',baby:'🧘',adult:'🕉️',size:'चरण 92',tier:5,need:9000},
+  {t:'ज्ञान चरण 93',en:'Wisdom Stage 93',baby:'🧘',adult:'🕉️',size:'चरण 93',tier:5,need:9000},
+  {t:'ज्ञान चरण 94',en:'Wisdom Stage 94',baby:'🧘',adult:'🕉️',size:'चरण 94',tier:5,need:9000},
+  {t:'ज्ञान चरण 95',en:'Wisdom Stage 95',baby:'🧘',adult:'🕉️',size:'चरण 95',tier:5,need:9000},
+  {t:'ज्ञान चरण 96',en:'Wisdom Stage 96',baby:'🧘',adult:'🕉️',size:'चरण 96',tier:5,need:9000},
+  {t:'ज्ञान चरण 97',en:'Wisdom Stage 97',baby:'🧘',adult:'🕉️',size:'चरण 97',tier:5,need:9000},
+  {t:'ज्ञान चरण 98',en:'Wisdom Stage 98',baby:'🧘',adult:'🕉️',size:'चरण 98',tier:5,need:9000},
+  {t:'ज्ञान चरण 99',en:'Wisdom Stage 99',baby:'🧘',adult:'🕉️',size:'चरण 99',tier:5,need:9000},
+  {t:'ज्ञान चरण 100',en:'Wisdom Stage 100',baby:'🧘',adult:'🕉️',size:'चरण 100',tier:5,need:9000},
 ];
 var NUM_STAGES=STAGES.length;
 
@@ -78,7 +138,13 @@ var MISSIONS=[
   {id:'streak5',title:'लगातार 5 सही जवाब दें',target:5,type:'bestStreak',reward:1500},
   {id:'stage5',title:'स्तर 5 तक पहुँचें',target:5,type:'stageCount',reward:2000},
   {id:'stage10',title:'स्तर 10 तक पहुँचें',target:10,type:'stageCount',reward:5000},
-  {id:'money10k',title:'कुल ₹10,000 जमा करें',target:10000,type:'money',reward:3000}
+  {id:'money10k',title:'कुल ₹10,000 जमा करें',target:10000,type:'money',reward:3000},
+  {id:'correct50',title:'50 सही जवाब दें',target:50,type:'correct',reward:5000},
+  {id:'streak10',title:'लगातार 10 सही जवाब दें',target:10,type:'bestStreak',reward:3000},
+  {id:'stage20',title:'स्तर 20 तक पहुँचें',target:20,type:'stageCount',reward:8000},
+  {id:'correct100',title:'100 सही जवाब दें',target:100,type:'correct',reward:10000},
+  {id:'streak15',title:'लगातार 15 सही जवाब दें',target:15,type:'bestStreak',reward:5000},
+  {id:'stage30',title:'स्तर 30 तक पहुँचें',target:30,type:'stageCount',reward:15000}
 ];
 var BASE_GYAN={1:40,2:60,3:90,4:130,5:180};
 var TIMER_BY_TIER={1:45,2:45,3:30,4:20,5:20};
@@ -89,7 +155,7 @@ function activeTier(){return STAGES[state.stage]?STAGES[state.stage].tier:1;}
 
 function defaultState(){
   return {user:user,stage:0,stageGyan:0,totalGyan:0,money:0,correct:0,wrong:0,streak:0,bestStreak:0,
-    bestTitle:0,titlesUnlocked:[0],gamesPlayed:0,questionsAnswered:0,
+    bestTitle:0,titlesUnlocked:[0],gamesPlayed:0,questionsAnswered:0,askedIds:[],
     missions:MISSIONS.map(function(m){return {id:m.id,progress:0,done:false};})};
 }
 function loadState(){
@@ -112,6 +178,9 @@ function loadState(){
   s.titlesUnlocked=tu;
   s.gamesPlayed=Math.max(0,Math.floor(num(s.gamesPlayed,0)));
   s.questionsAnswered=Math.max(0,Math.floor(num(s.questionsAnswered,0)));
+  if(!Array.isArray(s.askedIds))s.askedIds=[];
+  var _ai=[];s.askedIds.forEach(function(id){if(typeof id==='string'&&_ai.indexOf(id)<0)_ai.push(id);});
+  s.askedIds=_ai;
   if(!Array.isArray(s.missions))s.missions=[];
   MISSIONS.forEach(function(def){
     if(!s.missions.some(function(m){return m&&m.id===def.id;}))s.missions.push({id:def.id,progress:0,done:false});
@@ -288,17 +357,25 @@ function bindPress(el,fn){
 function bindClick(id,fn){bindPress($(id),fn);}
 
 /* ---------- Game flow ---------- */
-var currentQ=null,askedIds=[],askedSet={},answered=false,questionStart=0;
+var currentQ=null,answered=false,questionStart=0;
+var askedIds=Array.isArray(state.askedIds)?state.askedIds.slice():[];
+var askedSet={};
+askedIds.forEach(function(id){askedSet[id]=true;});
 var timerTotal=45,timerLeft=45,timerInt=null,lastBeat=99;
 
 function askedRemember(id){
+  if(askedSet[id])return;
   askedIds.push(id);
   askedSet[id]=true;
-  // when almost the whole bank has been asked this session, reset so high tiers never starve
+  if(!Array.isArray(state.askedIds))state.askedIds=[];
+  if(state.askedIds.indexOf(id)<0)state.askedIds.push(id);
+  // reset memory only after the entire bank has been asked, so questions never repeat until exhaustion
   var uniqueCount=0;
   for(var k in askedSet){if(askedSet[k])uniqueCount++;}
-  if(uniqueCount>=QUESTIONS.length-50){askedSet={};}
-  if(askedIds.length>4000)askedIds.shift();
+  if(uniqueCount>=QUESTIONS.length){
+    askedSet={};askedIds=[];state.askedIds=[];
+  }
+  save();
 }
 function questionsOfTier(tier){
   return Q_BY_TIER[tier]||[];
@@ -313,7 +390,13 @@ function pickQuestion(tier){
     var pool=questionsOfTier(t).filter(function(q){return !askedSet[q.id];});
     if(pool.length)return pool[Math.floor(Math.random()*pool.length)];
   }
-  // everything in reach seen already: exact tier ignoring memory
+  // still unasked questions in other tiers: search the whole bank before repeating
+  for(var t2=1;t2<=5;t2++){
+    var pool2=questionsOfTier(t2).filter(function(q){return !askedSet[q.id];});
+    if(pool2.length)return pool2[Math.floor(Math.random()*pool2.length)];
+  }
+  // entire bank exhausted: reset memory and pick fresh
+  askedSet={};askedIds=[];state.askedIds=[];save();
   var fallback=questionsOfTier(tier);
   if(fallback.length)return fallback[Math.floor(Math.random()*fallback.length)];
   return QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
@@ -471,10 +554,10 @@ function answer(i){
     if(i>=0)markOption(i,'wrong');
     state.streak=0;
     state.wrong++;
-    state.stageGyan-=50;
+    state.stageGyan-=400;
     $('qcard').classList.add('flash-bad');
     sfxWrong();
-    var msg='गलत! सही उत्तर: '+currentQ.o[currentQ.a]+' · −50 ज्ञान';
+    var msg='गलत! सही उत्तर: '+currentQ.o[currentQ.a]+' · −400 ज्ञान';
     if(state.stageGyan<0){
       if(state.stage>0){
         state.stage--;
