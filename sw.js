@@ -1,4 +1,4 @@
-const CACHE='wg-cd3970ea43';
+const CACHE='wg-b2330947fd';
 const CORE=[
   './',
   './manifest.appcache',
