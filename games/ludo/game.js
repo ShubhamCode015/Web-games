@@ -80,6 +80,64 @@ function toast(msg) {
   toastTimer = setTimeout(function () { el.className = 'toast'; }, 2400);
 }
 
+var audioCtx = null;
+function getAudio() {
+  if (audioCtx) return audioCtx;
+  try {
+    var C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return null;
+    audioCtx = new C();
+  } catch (e) { audioCtx = null; }
+  return audioCtx;
+}
+function tone(freq, dur, type, vol, delay) {
+  var c = getAudio();
+  if (!c) return;
+  try {
+    if (c.state === 'suspended') { try { c.resume(); } catch (e) {} }
+    var o = c.createOscillator();
+    var g = c.createGain();
+    o.type = type || 'square';
+    o.frequency.value = freq;
+    var t = c.currentTime + (delay || 0);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol || 0.08, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g);
+    g.connect(c.destination);
+    o.start(t);
+    o.stop(t + dur + 0.02);
+  } catch (e) {}
+}
+function sfxRoll() {
+  tone(880, 0.05, 'square', 0.06, 0);
+  tone(660, 0.05, 'square', 0.06, 0.06);
+  tone(440, 0.08, 'square', 0.06, 0.12);
+}
+function sfxMove(ev) {
+  if (!ev) return;
+  if (ev.win) { sfxWin(); return; }
+  if (ev.captured && ev.captured.length) {
+    tone(220, 0.08, 'sawtooth', 0.09, 0);
+    tone(160, 0.12, 'sawtooth', 0.09, 0.08);
+    return;
+  }
+  if (ev.finished) {
+    tone(660, 0.07, 'triangle', 0.08, 0);
+    tone(880, 0.09, 'triangle', 0.08, 0.08);
+    return;
+  }
+  if (ev.bonus) tone(520, 0.06, 'square', 0.06, 0);
+  else tone(420, 0.05, 'square', 0.05, 0);
+}
+function sfxWin() {
+  tone(523, 0.1, 'triangle', 0.09, 0);
+  tone(659, 0.1, 'triangle', 0.09, 0.1);
+  tone(784, 0.1, 'triangle', 0.09, 0.2);
+  tone(1046, 0.18, 'triangle', 0.1, 0.3);
+}
+function sfxNoMove() { tone(240, 0.1, 'square', 0.06, 0); }
+
 function show(id) {
   for (var i = 0; i < OVERLAYS.length; i++) {
     var el = $(OVERLAYS[i]);
@@ -410,7 +468,7 @@ function drawTokens() {
     var offsets = tokenOffsets(n);
     var baseX = (g.cell[1] + 0.5) * CELL;
     var baseY = (g.cell[0] + 0.5) * CELL;
-    var radius = n === 1 ? CELL * 0.32 : n <= 4 ? CELL * 0.19 : CELL * 0.14;
+    var radius = n === 1 ? CELL * 0.36 : n <= 4 ? CELL * 0.22 : CELL * 0.16;
     for (var i = 0; i < n; i++) {
       var item = g.items[i];
       var off = offsets[i] || [0, 0];
@@ -785,8 +843,10 @@ function doRoll() {
   if (!canRoll()) return;
   selectedToken = null;
   var ev = engine.roll(game, Math.random);
+  sfxRoll();
   render();
   eventToast(ev);
+  if (ev && ev.type === 'noMove') sfxNoMove();
   focusActionSoon();
   return ev;
 }
@@ -816,6 +876,7 @@ function chooseToken(i) {
   if (mode === 'remote') {
     if (remote.role === 'host') {
       var ev = engine.move(game, i);
+      sfxMove(ev);
       render();
       eventToast(ev);
       sendState();
@@ -831,6 +892,7 @@ function chooseToken(i) {
     return;
   }
   var result = engine.move(game, i);
+  sfxMove(result);
   selectedToken = null;
   render();
   eventToast(result);
