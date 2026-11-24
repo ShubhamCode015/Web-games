@@ -684,6 +684,7 @@ function bindUI() {
   show('menu');
   render();
   setTimeout(layoutBoard, 60);
+  if (params.get('pair')) setTimeout(openPair, 250);
 }
 
 window.addEventListener('resize', function () {
