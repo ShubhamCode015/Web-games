@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" manifest="../../manifest.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#160d12">
+<title>Ludo</title>
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../net.css">
+<script>
+window.addEventListener('error',function(e){
+  try{
+    var d=document.getElementById('errbox');
+    if(!d){
+      d=document.createElement('div');
+      d.id='errbox';
+      d.setAttribute('role','alert');
+      d.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#7f1d1d;color:#fff;font:12px/1.4 system-ui,sans-serif;padding:8px 10px;max-height:45%;overflow:auto';
+      (document.body||document.documentElement).appendChild(d);
+    }
+    d.textContent='Error: '+((e&&e.message)||'unknown error — please reload');
+  }catch(_){}
+},true);
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="topbar">
+    <div class="brand">LUDO<span>offline</span></div>
+    <div id="homePills">
+      <span class="homepill red"><i></i><b id="redHome">0/4</b></span>
+      <span class="homepill yellow"><i></i><b id="yellowHome">0/4</b></span>
+    </div>
+    <button id="menuBtn" class="iconbtn" type="button">Menu</button>
+  </div>
+
+  <div id="boardWrap"><canvas id="board" width="450" height="450" aria-label="Ludo board"></canvas></div>
+
+  <div id="turnbar">
+    <span id="turnDot" class="turnDot red"></span>
+    <b id="turnText">Roll the dice</b>
+    <span id="diceBox"><span>Dice</span><b id="diceVal">-</b></span>
+  </div>
+
+  <div id="actionbar">
+    <button id="rollBtn" type="button">ROLL DICE</button>
+    <div id="tokenBtns" class="tokenbtns hidden"></div>
+  </div>
+
+  <div id="menu" class="overlay">
+    <h2>Ludo</h2>
+    <p id="userinfo" class="small"></p>
+    <div class="statline"><span>Bot <b id="botStats">0-0</b></span><span>Games <b id="menuGames">0</b></span></div>
+    <p id="statsLine" class="small"></p>
+    <div class="difflabel">Bot difficulty</div>
+    <div class="diffline" id="diffLine">
+      <button type="button" data-diff="easy">Easy</button>
+      <button type="button" data-diff="normal">Normal</button>
+      <button type="button" data-diff="hard">Hard</button>
+    </div>
+    <button id="playBot" type="button">Play vs Bot</button>
+    <button id="playLocal" type="button">2 Players &mdash; same phone</button>
+    <button id="playRemote" type="button" class="remote">2 Phones &mdash; offline</button>
+    <div class="btnrow">
+      <button id="howtoBtn" type="button" class="alt">How to Play</button>
+      <button id="homeBtn" type="button" class="alt">Home</button>
+    </div>
+    <p class="small">Classic Ludo: 4 tokens, 6 to start, capture, safe stars, exact roll to finish. No internet needed.</p>
+  </div>
+
+  <div id="pause" class="overlay hidden">
+    <h2>Paused</h2>
+    <p id="pauseInfo" class="small"></p>
+    <button id="resumeBtn" type="button">Resume</button>
+    <button id="pauseMenuBtn" type="button" class="alt">Main Menu</button>
+  </div>
+
+  <div id="result" class="overlay hidden">
+    <h2 id="resultTitle">Game over</h2>
+    <p id="resultText"></p>
+    <div id="resultScore" class="resultscore"></div>
+    <button id="newRoundBtn" type="button">New Game</button>
+    <button id="resultMenuBtn" type="button" class="alt">Main Menu</button>
+  </div>
+
+  <div id="help" class="overlay hidden">
+    <h2>How to Play</h2>
+    <div class="helptext">
+      <p><b>Start:</b> a token leaves the base only on a 6. Roll a 6, capture a token, or bring a token home to get another roll.</p>
+      <p><b>Track:</b> move clockwise 51 squares, then up your own home lane. You need the exact number to finish.</p>
+      <p><b>Capture:</b> landing on an opponent sends it back to base, except on start squares and star safe squares.</p>
+      <p><b>Win:</b> first player to bring all 4 tokens home wins. Three 6s in a row loses that turn.</p>
+      <p><b>Keys:</b> 5 or Enter rolls, 1-4 picks a token, D-pad moves focus, 0 opens the menu. Tap tokens on the board too.</p>
+      <p><b>2 Phones:</b> use the same Wi-Fi hotspot or Bluetooth tethering. Exchange the pairing codes once; gameplay stays offline.</p>
+    </div>
+    <button id="helpBack" type="button">Back</button>
+  </div>
+
+  <div id="pair" class="overlay hidden"><div id="pairBody"></div></div>
+  <div id="toast" class="toast"></div>
+</div>
+<script src="engine.js"></script>
+<script src="../net.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
