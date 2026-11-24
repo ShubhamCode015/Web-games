@@ -1,4 +1,4 @@
-const CACHE='wg-0b0c3d1cef';
+const CACHE='wg-4ef9c1702a';
 const CORE=[
   './',
   './manifest.appcache',
@@ -20,6 +20,12 @@ const CORE=[
   './games/hillclimb/game.js',
   './games/hillclimb/index.html',
   './games/hillclimb/style.css',
+  './games/ludo/engine.js',
+  './games/ludo/game.js',
+  './games/ludo/index.html',
+  './games/ludo/style.css',
+  './games/net.css',
+  './games/net.js',
   './games/puzzle2048/game.js',
   './games/puzzle2048/index.html',
   './games/puzzle2048/style.css',
@@ -29,6 +35,10 @@ const CORE=[
   './games/snake/game.js',
   './games/snake/index.html',
   './games/snake/style.css',
+  './games/tictactoe/engine.js',
+  './games/tictactoe/game.js',
+  './games/tictactoe/index.html',
+  './games/tictactoe/style.css',
   './icon.svg',
   './index.html',
   './manifest.json',

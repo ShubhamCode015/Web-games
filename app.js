@@ -7,7 +7,9 @@ const DEFAULT_GAMES=[
   {title:'Farm Sim',path:'games/farm/index.html',icon:'🌾',desc:'Idle farming simulation'},
   {title:'Kon Banega Gyani',path:'games/gyani/index.html',icon:'🧠',desc:'KBC-style ज्ञान की यात्रा'},
   {title:'Snake',path:'games/snake/index.html',icon:'🐍',desc:'Classic snake — eat, grow, survive'},
-  {title:'Bounce',path:'games/bounce/index.html',icon:'🔴',desc:'Bouncy ball ring adventure'}
+  {title:'Bounce',path:'games/bounce/index.html',icon:'🔴',desc:'Bouncy ball ring adventure'},
+  {title:'Tic Tac Toe',path:'games/tictactoe/index.html',icon:'❌',desc:'X/O strategy — bot, same phone or 2 phones'},
+  {title:'Ludo',path:'games/ludo/index.html',icon:'🎲',desc:'Classic 4-token race — bot, same phone or 2 phones'}
 ];
 const $=id=>document.getElementById(id);
 
@@ -114,6 +116,10 @@ function render(){
     if(sp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot snake"></span>Snake <b>Lv ${escape(sp.level||1)}</b> · $${escape(sp.money||0)} · best ${escape(sp.best||0)}`;pl.appendChild(d);anyProgress=true;}
     const bo=readJSON('bounce_'+user.name);
     if(bo){const done=Array.isArray(bo.levelsDone)?bo.levelsDone.length:0;const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot bounce"></span>Bounce <b>Lv ${escape(bo.level||1)}</b> · $${escape(bo.money||0)} · ${escape(done)}/6 levels`;pl.appendChild(d);anyProgress=true;}
+    const tp=readJSON('tictactoe_'+user.name);
+    if(tp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot ttt"></span>Tic Tac Toe <b>${escape(tp.wins||0)}W-${escape(tp.losses||0)}L-${escape(tp.draws||0)}D</b> · ${escape(tp.games||0)} games`;pl.appendChild(d);anyProgress=true;}
+    const lp=readJSON('ludo_'+user.name);
+    if(lp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot ludo"></span>Ludo <b>Bot ${escape(lp.botWins||0)}-${escape(lp.botLosses||0)}</b> · 2 phones ${escape(lp.remoteWins||0)}-${escape(lp.remoteLosses||0)}`;pl.appendChild(d);anyProgress=true;}
   }catch(e){}
   if(!anyProgress)pl.textContent='No progress yet. Play a game to get started.';
   renderGames($('glist'),DEFAULT_GAMES);

@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Offline Web Games wg-0b0c3d1cef
+# Offline Web Games wg-4ef9c1702a
 
 CACHE:
 app.js
@@ -20,6 +20,12 @@ games/gyani/style.css
 games/hillclimb/game.js
 games/hillclimb/index.html
 games/hillclimb/style.css
+games/ludo/engine.js
+games/ludo/game.js
+games/ludo/index.html
+games/ludo/style.css
+games/net.css
+games/net.js
 games/puzzle2048/game.js
 games/puzzle2048/index.html
 games/puzzle2048/style.css
@@ -29,6 +35,10 @@ games/racing/style.css
 games/snake/game.js
 games/snake/index.html
 games/snake/style.css
+games/tictactoe/engine.js
+games/tictactoe/game.js
+games/tictactoe/index.html
+games/tictactoe/style.css
 icon.svg
 index.html
 manifest.json
@@ -45,6 +55,8 @@ games/boxing/ games/boxing/index.html
 games/farm/ games/farm/index.html
 games/gyani/ games/gyani/index.html
 games/hillclimb/ games/hillclimb/index.html
+games/ludo/ games/ludo/index.html
 games/puzzle2048/ games/puzzle2048/index.html
 games/racing/ games/racing/index.html
 games/snake/ games/snake/index.html
+games/tictactoe/ games/tictactoe/index.html

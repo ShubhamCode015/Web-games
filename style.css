@@ -38,6 +38,8 @@ button.mini{width:auto;padding:7px 12px;font-size:13px;margin:0;background:#3a3a
 .dot.gyani{background:#f5c542;box-shadow:0 0 8px #f5c542}
 .dot.snake{background:#a3e635;box-shadow:0 0 8px #a3e635}
 .dot.bounce{background:#f43f5e;box-shadow:0 0 8px #f43f5e}
+.dot.ttt{background:#38bdf8;box-shadow:0 0 8px #38bdf8}
+.dot.ludo{background:#a78bfa;box-shadow:0 0 8px #a78bfa}
 .small{font-size:12px;color:var(--muted);line-height:1.5}
 .hidden{display:none}
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
