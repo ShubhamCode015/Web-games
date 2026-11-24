@@ -5,7 +5,9 @@ const DEFAULT_GAMES=[
   {title:'Hill Climb',path:'games/hillclimb/index.html',icon:'🚙',desc:'Off-road hill climbing'},
   {title:'2048 Puzzle',path:'games/puzzle2048/index.html',icon:'🔢',desc:'Number tile puzzle'},
   {title:'Farm Sim',path:'games/farm/index.html',icon:'🌾',desc:'Idle farming simulation'},
-  {title:'Kon Banega Gyani',path:'games/gyani/index.html',icon:'🧠',desc:'KBC-style ज्ञान की यात्रा'}
+  {title:'Kon Banega Gyani',path:'games/gyani/index.html',icon:'🧠',desc:'KBC-style ज्ञान की यात्रा'},
+  {title:'Snake',path:'games/snake/index.html',icon:'🐍',desc:'Classic snake — eat, grow, survive'},
+  {title:'Bounce',path:'games/bounce/index.html',icon:'🔴',desc:'Bouncy ball ring adventure'}
 ];
 const $=id=>document.getElementById(id);
 
@@ -108,6 +110,10 @@ function render(){
     if(fp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot farm"></span>Farm Sim <b>Lv ${escape(fp.level)}</b> · $${escape(fp.money)} · ${escape(fp.harvests||0)} harvests`;pl.appendChild(d);anyProgress=true;}
     const gp=readJSON('gyani_'+user.name);
     if(gp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot gyani"></span>Gyani <b>स्तर ${escape((gp.stage||0)+1)}</b> · ₹${escape(gp.money||0)} · 🔥${escape(gp.streak||0)} streak`;pl.appendChild(d);anyProgress=true;}
+    const sp=readJSON('snake_'+user.name);
+    if(sp){const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot snake"></span>Snake <b>Lv ${escape(sp.level||1)}</b> · $${escape(sp.money||0)} · best ${escape(sp.best||0)}`;pl.appendChild(d);anyProgress=true;}
+    const bo=readJSON('bounce_'+user.name);
+    if(bo){const done=Array.isArray(bo.levelsDone)?bo.levelsDone.length:0;const d=document.createElement('div');d.className='progline';d.innerHTML=`<span class="dot bounce"></span>Bounce <b>Lv ${escape(bo.level||1)}</b> · $${escape(bo.money||0)} · ${escape(done)}/6 levels`;pl.appendChild(d);anyProgress=true;}
   }catch(e){}
   if(!anyProgress)pl.textContent='No progress yet. Play a game to get started.';
   renderGames($('glist'),DEFAULT_GAMES);

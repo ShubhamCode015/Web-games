@@ -1,8 +1,11 @@
 CACHE MANIFEST
-# Offline Web Games wg-b2330947fd
+# Offline Web Games wg-0b0c3d1cef
 
 CACHE:
 app.js
+games/bounce/game.js
+games/bounce/index.html
+games/bounce/style.css
 games/boxing/game.js
 games/boxing/index.html
 games/boxing/style.css
@@ -23,6 +26,9 @@ games/puzzle2048/style.css
 games/racing/game.js
 games/racing/index.html
 games/racing/style.css
+games/snake/game.js
+games/snake/index.html
+games/snake/style.css
 icon.svg
 index.html
 manifest.json
@@ -34,9 +40,11 @@ http://*
 https://*
 
 FALLBACK:
+games/bounce/ games/bounce/index.html
 games/boxing/ games/boxing/index.html
 games/farm/ games/farm/index.html
 games/gyani/ games/gyani/index.html
 games/hillclimb/ games/hillclimb/index.html
 games/puzzle2048/ games/puzzle2048/index.html
 games/racing/ games/racing/index.html
+games/snake/ games/snake/index.html

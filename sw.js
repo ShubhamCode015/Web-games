@@ -1,8 +1,11 @@
-const CACHE='wg-b2330947fd';
+const CACHE='wg-0b0c3d1cef';
 const CORE=[
   './',
   './manifest.appcache',
   './app.js',
+  './games/bounce/game.js',
+  './games/bounce/index.html',
+  './games/bounce/style.css',
   './games/boxing/game.js',
   './games/boxing/index.html',
   './games/boxing/style.css',
@@ -23,6 +26,9 @@ const CORE=[
   './games/racing/game.js',
   './games/racing/index.html',
   './games/racing/style.css',
+  './games/snake/game.js',
+  './games/snake/index.html',
+  './games/snake/style.css',
   './icon.svg',
   './index.html',
   './manifest.json',
