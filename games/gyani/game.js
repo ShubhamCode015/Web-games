@@ -133,18 +133,18 @@ var STAGES=[
 var NUM_STAGES=STAGES.length;
 
 var MISSIONS=[
-  {id:'correct10',title:'10 सही जवाब दें',target:10,type:'correct',reward:1000},
-  {id:'correct25',title:'25 सही जवाब दें',target:25,type:'correct',reward:2500},
-  {id:'streak5',title:'लगातार 5 सही जवाब दें',target:5,type:'bestStreak',reward:1500},
-  {id:'stage5',title:'स्तर 5 तक पहुँचें',target:5,type:'stageCount',reward:2000},
-  {id:'stage10',title:'स्तर 10 तक पहुँचें',target:10,type:'stageCount',reward:5000},
-  {id:'money10k',title:'कुल ₹10,000 जमा करें',target:10000,type:'money',reward:3000},
-  {id:'correct50',title:'50 सही जवाब दें',target:50,type:'correct',reward:5000},
-  {id:'streak10',title:'लगातार 10 सही जवाब दें',target:10,type:'bestStreak',reward:3000},
-  {id:'stage20',title:'स्तर 20 तक पहुँचें',target:20,type:'stageCount',reward:8000},
-  {id:'correct100',title:'100 सही जवाब दें',target:100,type:'correct',reward:10000},
-  {id:'streak15',title:'लगातार 15 सही जवाब दें',target:15,type:'bestStreak',reward:5000},
-  {id:'stage30',title:'स्तर 30 तक पहुँचें',target:30,type:'stageCount',reward:15000}
+  {id:'correct10',title:'10 सही जवाब दें',target:10,type:'correct',reward:500},
+  {id:'correct25',title:'25 सही जवाब दें',target:25,type:'correct',reward:1250},
+  {id:'streak5',title:'लगातार 5 सही जवाब दें',target:5,type:'bestStreak',reward:750},
+  {id:'stage5',title:'स्तर 5 तक पहुँचें',target:5,type:'stageCount',reward:1000},
+  {id:'stage10',title:'स्तर 10 तक पहुँचें',target:10,type:'stageCount',reward:2500},
+  {id:'money10k',title:'कुल ₹10,000 जमा करें',target:10000,type:'money',reward:1500},
+  {id:'correct50',title:'50 सही जवाब दें',target:50,type:'correct',reward:2500},
+  {id:'streak10',title:'लगातार 10 सही जवाब दें',target:10,type:'bestStreak',reward:1500},
+  {id:'stage20',title:'स्तर 20 तक पहुँचें',target:20,type:'stageCount',reward:4000},
+  {id:'correct100',title:'100 सही जवाब दें',target:100,type:'correct',reward:5000},
+  {id:'streak15',title:'लगातार 15 सही जवाब दें',target:15,type:'bestStreak',reward:2500},
+  {id:'stage30',title:'स्तर 30 तक पहुँचें',target:30,type:'stageCount',reward:7500}
 ];
 var BASE_GYAN={1:40,2:60,3:90,4:130,5:180};
 var TIMER_BY_TIER={1:45,2:45,3:30,4:20,5:20};
@@ -526,7 +526,8 @@ function answer(i){
     if(state.streak>=3)gain=Math.round(gain*1.25);
     state.stageGyan+=gain;
     state.totalGyan+=gain;
-    state.money+=100*diff;
+    var rewardMoney=50*diff;
+    state.money+=rewardMoney;
     state.correct++;
     sfxCorrect();
     var promoted=false;
@@ -544,7 +545,7 @@ function answer(i){
       updateStageView();updateMenu();
       showPromotion();
     }else{
-      toast('सही! +'+gain+' ज्ञान · +₹'+(100*diff));
+      toast('सही! +'+gain+' ज्ञान · +₹'+rewardMoney);
       save();
       updateStageView();
       setTimeout(renderQuestion,850);
@@ -554,23 +555,19 @@ function answer(i){
     if(i>=0)markOption(i,'wrong');
     state.streak=0;
     state.wrong++;
-    state.stageGyan-=400;
     $('qcard').classList.add('flash-bad');
     sfxWrong();
-    var msg='गलत! सही उत्तर: '+currentQ.o[currentQ.a]+' · −400 ज्ञान';
-    if(state.stageGyan<0){
-      if(state.stage>0){
-        state.stage--;
-        state.stageGyan=Math.floor(STAGES[state.stage].need*0.5);
-        msg='अवनति! अब आप हैं: '+STAGES[state.stage].t;
-        toast(msg);
-      }else{
-        state.stageGyan=0;
-        toast('गलत! ज्ञान 0 पर — पर शुरू से फिर…');
-      }
-    }else{
-      toast(msg);
+    var drop=state.stage>=20?2:1;
+    var oldStage=state.stage;
+    var newStage=Math.max(0,oldStage-drop);
+    var lost=oldStage-newStage;
+    state.stage=newStage;
+    state.stageGyan=lost>0?Math.floor(STAGES[state.stage].need*0.5):0;
+    var msg='गलत! सही उत्तर: '+currentQ.o[currentQ.a];
+    if(lost>0){
+      msg+=' · अवनति: '+lost+' स्तर नीचे';
     }
+    toast(msg);
     claimMissions();
     save();
     updateStageView();
@@ -579,7 +576,7 @@ function answer(i){
 }
 function showPromotion(){
   var st=STAGES[state.stage];
-  var bonus=500*st.tier;
+  var bonus=250*st.tier;
   state.money+=bonus;
   claimMissions();
   save();
