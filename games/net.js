@@ -290,14 +290,44 @@
   }
 
   function chunkCode(code) {
-    code = String(code == null ? '' : code).replace(/\s+/g, '');
+    code = String(code == null ? '' : code).replace(/\\s+/g, '');
     return code.replace(/.{1,6}/g, function (m) { return m + ' '; }).trim();
+  }
+
+  function extractCode(input) {
+    var s = String(input == null ? '' : input);
+    var m = s.match(/[?&#]pair=([^&#\\s]+)/i);
+    if (m) {
+      try { s = decodeURIComponent(m[1]); } catch (e) { s = m[1]; }
+    }
+    s = s.replace(/\\s+/g, '');
+    var at = s.indexOf(PREFIX);
+    if (at > 0) s = s.slice(at);
+    return s;
+  }
+
+  function makeLink(code) {
+    try {
+      var url = new URL(root.location.href);
+      url.search = '';
+      url.hash = '';
+      url.searchParams.set('pair', code);
+      return url.toString();
+    } catch (e) {
+      return (root.location.href.split('?')[0].split('#')[0]) + '?pair=' + encodeURIComponent(code);
+    }
   }
 
   function pair(opts) {
     opts = opts || {};
     var rootEl = opts.root;
     if (!rootEl) throw new Error('Pairing container missing');
+    var incoming = opts.initialCode || '';
+    try {
+      var sp = new URLSearchParams(root.location.search);
+      if (sp.get('pair')) incoming = sp.get('pair');
+    } catch (e) {}
+    incoming = extractCode(incoming);
     var connType = 'hotspot';
     var session = null;
     var timer = null;
@@ -397,12 +427,34 @@
       return '<b>Wi-Fi hotspot</b><br>1. Turn on Wi-Fi hotspot on one phone (mobile data can stay off).<br>2. Connect the other phone to that hotspot.<br>3. Keep both phones on this screen.';
     }
 
-    function codeButtons() {
-      return '<div class="netpan-btns">' +
-        '<button type="button" data-act="copy" data-focus>Copy code</button>' +
-        '<button type="button" data-act="share" class="alt">Share/SMS</button>' +
-        '<button type="button" data-act="select-code" class="alt">Select all</button>' +
-        '</div>';
+  function codeButtons() {
+    return '<div class="netpan-btns">' +
+      '<button type="button" data-act="copy" data-focus>Copy code</button>' +
+      '<button type="button" data-act="share" class="alt">Share/SMS</button>' +
+      '<button type="button" data-act="share-link" class="alt">Share link</button>' +
+      '<button type="button" data-act="copy-link" class="alt">Copy link</button>' +
+      '<button type="button" data-act="qr" class="alt">Show QR</button>' +
+      '<button type="button" data-act="select-code" class="alt">Select all</button>' +
+      '</div>';
+  }
+
+    function renderQr(code) {
+      var box = rootEl.querySelector('#qrBox');
+      if (!box) return;
+      box.innerHTML = '';
+      var link = makeLink(code);
+      if (window.QRCode) {
+        try {
+          new window.QRCode(box, { text: link, width: 152, height: 152, correctLevel: (window.QRCode.CorrectLevel ? window.QRCode.CorrectLevel.M : 0) });
+        } catch (e) {
+          box.textContent = '';
+        }
+      }
+      var p = document.createElement('p');
+      p.className = 'netpan-tip';
+      p.textContent = 'Scan QR or open link: ' + link;
+      p.style.wordBreak = 'break-all';
+      box.appendChild(p);
     }
 
     function renderMenu() {
@@ -435,8 +487,9 @@
         '<p class="netpan-help">' + connHelp() + '</p>' +
         '<label class="netpan-label">1. Send this invite code to the other phone:</label>' +
         '<textarea class="netpan-code" id="offerCode" readonly spellcheck="false" onfocus="try{this.select();this.setSelectionRange(0,this.value.length);}catch(e){}">' + esc(chunkCode(status && status.code || '')) + '</textarea>' +
-        (status && status.code ? codeButtons() : '') +
-        '<label class="netpan-label">2. Paste or type the guest reply code:</label>' +
+(status && status.code ? codeButtons() : '') +
+(status && status.code ? '<div class="netpan-qr" id="qrBox"></div>' : '') +
+'<label class="netpan-label">2. Paste or type the guest reply code:</label>' +
         '<textarea class="netpan-code" id="answerCode" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" inputmode="text" onfocus="try{this.select();this.setSelectionRange(0,this.value.length);}catch(e){}" placeholder="Reply code from the other phone"></textarea>' +
         '<div class="netpan-btns">' +
         '<button type="button" data-act="paste-answer" class="alt">Paste code</button>' +
@@ -486,6 +539,7 @@
         '<p class="netpan-help">Send this reply code back to the host phone. Keep this screen open.</p>' +
         '<textarea class="netpan-code" id="replyCode" readonly spellcheck="false" onfocus="try{this.select();this.setSelectionRange(0,this.value.length);}catch(e){}">' + esc(chunkCode(answer)) + '</textarea>' +
         codeButtons() +
+        '<div class="netpan-qr" id="qrBox"></div>' +
         '<div class="netpan-btns">' +
         '<button type="button" data-act="join-back" class="alt wide">Cancel</button>' +
         '</div>' +
@@ -517,6 +571,7 @@
       s.createOffer().then(function (code) {
         if (destroyed || handedOff) return;
         renderHost({ code: code, msg: 'Invite code ready. Send it to the guest.', kind: 'ok' });
+        renderQr(code);
       }).catch(function (e) {
         if (destroyed) return;
         stopSession();
@@ -526,7 +581,7 @@
 
     function readCode(id) {
       var el = rootEl.querySelector('#' + id);
-      return el ? String(el.value || '').trim() : '';
+      return el ? extractCode(el.value) : '';
     }
 
     function connectHost() {
@@ -561,6 +616,7 @@
       s.acceptOffer(code).then(function (answer) {
         if (destroyed || handedOff) return;
         renderAnswer(answer);
+        renderQr(answer);
       }).catch(function (e) {
         if (destroyed) return;
         stopSession();
@@ -581,10 +637,12 @@
     function pasteInto(id) {
       var el = rootEl.querySelector('#' + id);
       if (!el) return;
-      function done(v) {
-        if (v != null && String(v).trim()) el.value = String(v).trim();
-        try { el.focus(); el.select(); el.setSelectionRange(0, el.value.length); } catch (e) {}
-      }
+       function done(v) {
+         var code = extractCode(v);
+         if (code) el.value = code;
+         else if (v != null && String(v).trim()) el.value = String(v).trim();
+         try { el.focus(); el.select(); el.setSelectionRange(0, el.value.length); } catch (e) {}
+       }
       if (root.navigator && root.navigator.clipboard && typeof root.navigator.clipboard.readText === 'function') {
         root.navigator.clipboard.readText().then(done).catch(function () {
           try { el.focus(); el.select(); } catch (e) {}
@@ -631,6 +689,31 @@
         if (el) {
           if (copyText(el.value)) onCopySuccess(); else onCopyFail();
         }
+        return;
+      }
+      if (act === 'copy-link' || act === 'share-link') {
+        var cel = rootEl.querySelector(role === 'host' ? '#offerCode' : '#replyCode');
+        var code = cel ? extractCode(cel.value) : '';
+        if (!code) { statusText('Code not ready yet.', 'err'); return; }
+        var link = makeLink(code);
+        if (act === 'copy-link') {
+          if (copyText(link)) statusText('Link copied. Send it to the other phone.', 'ok');
+          else statusText('Copy failed. Select the link manually.', 'err');
+        } else {
+          shareText(link, 'Offline game link').then(function () {
+            statusText('Link shared. Other phone can tap it to join.', 'ok');
+          }).catch(function () {
+            if (copyText(link)) onCopySuccess(); else onCopyFail();
+          });
+        }
+        return;
+      }
+      if (act === 'qr') {
+        var qel = rootEl.querySelector(role === 'host' ? '#offerCode' : '#replyCode');
+        var qcode = qel ? extractCode(qel.value) : '';
+        if (!qcode) { statusText('Code not ready yet.', 'err'); return; }
+        renderQr(qcode);
+        statusText('QR code shown. Scan it with the other phone.', 'ok');
         return;
       }
       if (act === 'select-code') {
@@ -686,7 +769,26 @@
       try { list[idx].focus(); } catch (err) {}
     };
 
-    renderMenu();
+    var autoJoin = false;
+    if (incoming) {
+      try {
+        var d = unpack(incoming);
+        if (d.type === 'offer') autoJoin = true;
+      } catch (e) {}
+    }
+
+    if (autoJoin) {
+      role = 'join';
+      renderJoin({ offer: incoming });
+      setTimeout(function () {
+        if (destroyed) return;
+        createReply();
+      }, 50);
+    } else {
+      renderMenu();
+    }
+    // clean URL
+    try { root.history.replaceState({}, '', root.location.pathname + root.location.hash); } catch (e) {}
 
     return {
       destroy: function () {

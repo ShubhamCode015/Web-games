@@ -23,6 +23,9 @@
 .netpan-status.wait{color:#ffd166}
 .netpan-arrow{color:#79e0f5}
 .netpan-tip{font-size:10px;line-height:1.4;color:#8d98b6;text-align:center;margin:7px 0 0}
+.netpan-qr{text-align:center;margin:8px 0;padding:8px;background:#0b101d;border:1px solid rgba(130,160,255,.25);border-radius:9px}
+.netpan-qr img,.netpan-qr canvas{margin:0 auto;display:block}
+.netpan-qr p{font-size:9px;line-height:1.35;color:#9db0d9;margin:6px 0 0;word-break:break-all}
 @media (max-height:520px){
   .netpanel h2{font-size:18px;margin-bottom:4px}
   .netpan-sub{margin-bottom:6px}
