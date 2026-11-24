@@ -91,6 +91,46 @@ function buildBoard() {
   }
 }
 
+var audioCtx = null;
+function getAudio() {
+  if (audioCtx) return audioCtx;
+  try {
+    var C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return null;
+    audioCtx = new C();
+  } catch (e) { audioCtx = null; }
+  return audioCtx;
+}
+function tone(freq, dur, type, vol, delay) {
+  var c = getAudio();
+  if (!c) return;
+  try {
+    if (c.state === 'suspended') { try { c.resume(); } catch (e) {} }
+    var o = c.createOscillator();
+    var g = c.createGain();
+    o.type = type || 'square';
+    o.frequency.value = freq;
+    var t = c.currentTime + (delay || 0);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol || 0.07, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g);
+    g.connect(c.destination);
+    o.start(t);
+    o.stop(t + dur + 0.02);
+  } catch (e) {}
+}
+function sfxPlace() { tone(660, 0.06, 'square', 0.06, 0); }
+function sfxWin() {
+  tone(523, 0.09, 'triangle', 0.08, 0);
+  tone(659, 0.09, 'triangle', 0.08, 0.1);
+  tone(784, 0.14, 'triangle', 0.08, 0.2);
+}
+function sfxDraw() {
+  tone(330, 0.1, 'square', 0.06, 0);
+  tone(277, 0.14, 'square', 0.06, 0.1);
+}
+
 function show(id) {
   for (var i = 0; i < OVERLAYS.length; i++) {
     var el = $(OVERLAYS[i]);
@@ -253,13 +293,14 @@ function makeMove(i, mark) {
   if (win) {
     over = true;
     result = win;
-    if (win === 'draw') scores.D++;
-    else scores[win]++;
+    if (win === 'draw') { scores.D++; sfxDraw(); }
+    else { scores[win]++; sfxWin(); }
     if (mode === 'bot') recordBotResult(win);
     render();
     setTimeout(function () { if (over) showResult(); }, 260);
     return true;
   }
+  sfxPlace();
   turn = engine.other(mark);
   render();
   if (mode === 'bot' && turn === 'O') scheduleBot();
