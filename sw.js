@@ -40,6 +40,7 @@ const CORE=[
   './games/tictactoe/index.html',
   './games/tictactoe/style.css',
   './icon.svg',
+  './vendor/qrcode.min.js',
   './index.html',
   './manifest.json',
   './style.css'
