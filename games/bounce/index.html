@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" manifest="../../manifest.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0a1020">
+<title>Bounce</title>
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script>
+window.addEventListener('error',function(e){
+  try{
+    var d=document.getElementById('errbox');
+    if(!d){
+      d=document.createElement('div');
+      d.id='errbox';
+      d.setAttribute('role','alert');
+      d.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#7f1d1d;color:#fff;font:12px/1.4 system-ui,sans-serif;padding:8px 10px;max-height:45%;overflow:auto';
+      (document.body||document.documentElement).appendChild(d);
+    }
+    d.textContent='Error: '+((e&&e.message)||'unknown error — please reload');
+  }catch(_){}
+},true);
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <canvas id="c" width="360" height="480" aria-label="Bounce game"></canvas>
+    <button id="pauseBtn" class="pausebtn hidden" type="button" aria-label="Pause">II</button>
+    <div id="touchcontrols" class="touchcontrols hidden">
+      <button id="tLeft" class="tc" type="button" aria-label="Move left">&#9664;</button>
+      <button id="tJump" class="tc jump" type="button">JUMP</button>
+      <button id="tRight" class="tc" type="button" aria-label="Move right">&#9654;</button>
+    </div>
+  </div>
+
+  <div id="menu" class="overlay">
+    <h2>Bounce</h2>
+    <p id="userinfo"></p>
+    <div class="pills">
+      <span class="pill">LV <b id="mlevel"></b></span>
+      <span class="pill">XP <b id="mxp"></b>/<b id="mneed"></b></span>
+      <span class="pill gold">$<b id="mmoney"></b></span>
+    </div>
+    <p id="mstats" class="small"></p>
+    <button id="start">Play</button>
+    <button id="levelsBtn">Levels</button>
+    <div class="btnrow">
+      <button id="mute2" class="alt">Sound: On</button>
+      <button id="home" class="alt">Home</button>
+    </div>
+    <p class="small">4/6 move &middot; 5 jump &middot; 0 pause. Collect every ring, then reach the gate.</p>
+  </div>
+
+  <div id="levels" class="overlay hidden">
+    <h2>Levels</h2>
+    <div id="llist" class="llist"></div>
+    <button id="back1">Back</button>
+  </div>
+
+  <div id="pausev" class="overlay hidden">
+    <h2>Paused</h2>
+    <p>Level <b id="plevel"></b> &middot; Rings <b id="pringsb"></b></p>
+    <button id="resume">Resume</button>
+    <button id="restart" class="alt">Restart</button>
+    <button id="menuP" class="alt">Menu</button>
+  </div>
+
+  <div id="over" class="overlay hidden">
+    <h2 id="otitle">Level Complete!</h2>
+    <p id="otext"></p>
+    <p id="ostats" class="small"></p>
+    <button id="next">Next Level</button>
+    <button id="replay" class="alt">Replay</button>
+    <button id="menuO" class="alt">Menu</button>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
