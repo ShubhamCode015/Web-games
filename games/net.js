@@ -237,17 +237,40 @@
   function copyText(text) {
     var ok = false;
     try {
-      var area = document.createElement('textarea');
-      area.value = text;
-      area.setAttribute('readonly', 'readonly');
-      area.style.cssText = 'position:fixed;top:0;left:0;width:2px;height:2px;opacity:0';
-      document.body.appendChild(area);
-      area.select();
-      area.setSelectionRange(0, area.value.length);
-      ok = document.execCommand('copy');
-      document.body.removeChild(area);
+      if (root.navigator && root.navigator.clipboard && typeof root.navigator.clipboard.writeText === 'function') {
+        root.navigator.clipboard.writeText(text);
+        ok = true;
+      }
     } catch (e) { ok = false; }
+    if (!ok) {
+      try {
+        var area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly', 'readonly');
+        area.style.cssText = 'position:fixed;top:0;left:0;width:2px;height:2px;opacity:0';
+        document.body.appendChild(area);
+        area.focus();
+        area.select();
+        area.setSelectionRange(0, area.value.length);
+        ok = document.execCommand('copy');
+        document.body.removeChild(area);
+      } catch (e) { ok = false; }
+    }
     return ok;
+  }
+
+
+  function mozShare(text) {
+    if (typeof root.MozActivity !== 'function') return false;
+    try {
+      new root.MozActivity({ name: 'share', data: { type: 'text/plain', blobs: [text] } });
+      return true;
+    } catch (e) {}
+    try {
+      new root.MozActivity({ name: 'share', data: { type: 'text/plain', text: text } });
+      return true;
+    } catch (e) {}
+    return false;
   }
 
   function shareText(text, title) {
@@ -256,6 +279,7 @@
         return root.navigator.share({ title: title || 'Offline game code', text: text });
       } catch (e) {}
     }
+    if (mozShare(text)) return Promise.resolve();
     return Promise.reject(new Error('Sharing is not available'));
   }
 
@@ -263,6 +287,11 @@
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
+  }
+
+  function chunkCode(code) {
+    code = String(code == null ? '' : code).replace(/\s+/g, '');
+    return code.replace(/.{1,6}/g, function (m) { return m + ' '; }).trim();
   }
 
   function pair(opts) {
@@ -369,11 +398,10 @@
     }
 
     function codeButtons() {
-      var share = (root.navigator && typeof root.navigator.share === 'function')
-        ? '<button type="button" data-act="share" class="alt">Share</button>' : '';
       return '<div class="netpan-btns">' +
         '<button type="button" data-act="copy" data-focus>Copy code</button>' +
-        share +
+        '<button type="button" data-act="share" class="alt">Share/SMS</button>' +
+        '<button type="button" data-act="select-code" class="alt">Select all</button>' +
         '</div>';
     }
 
@@ -406,22 +434,24 @@
         '<span class="netpan-sub">' + (connType === 'bluetooth' ? 'Bluetooth tethering' : 'Wi-Fi hotspot') + ' &middot; no internet</span>' +
         '<p class="netpan-help">' + connHelp() + '</p>' +
         '<label class="netpan-label">1. Send this invite code to the other phone:</label>' +
-        '<textarea class="netpan-code" id="offerCode" readonly spellcheck="false">' + esc(status && status.code || '') + '</textarea>' +
+        '<textarea class="netpan-code" id="offerCode" readonly spellcheck="false" onfocus="try{this.select();this.setSelectionRange(0,this.value.length);}catch(e){}">' + esc(chunkCode(status && status.code || '')) + '</textarea>' +
         (status && status.code ? codeButtons() : '') +
-        '<label class="netpan-label">2. Paste the guest reply code here:</label>' +
-        '<textarea class="netpan-code" id="answerCode" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="Reply code from the other phone"></textarea>' +
+        '<label class="netpan-label">2. Paste or type the guest reply code:</label>' +
+        '<textarea class="netpan-code" id="answerCode" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" inputmode="text" onfocus="try{this.select();this.setSelectionRange(0,this.value.length);}catch(e){}" placeholder="Reply code from the other phone"></textarea>' +
         '<div class="netpan-btns">' +
+        '<button type="button" data-act="paste-answer" class="alt">Paste code</button>' +
+        '<button type="button" data-act="select-answer" class="alt">Select all</button>' +
         '<button type="button" data-act="connect" class="wide" ' + (status && status.code ? '' : 'disabled') + '>Connect</button>' +
         '<button type="button" data-act="host-back" class="alt wide">Cancel</button>' +
         '</div>' +
         '<p class="netpan-status' + (status && status.kind ? ' ' + status.kind : '') + '" id="netStatus">' + esc(status && status.msg || '') + '</p>' +
-        '<p class="netpan-tip">Keep the code on one line when copying. Do not type the long code by hand unless you have to.</p>' +
+        '<p class="netpan-tip">Spaces in the code are okay. Use Copy/Share/Paste; type manually only if needed.</p>' +
         '</div>';
       if (status && status.code) focusFirst('[data-act="copy"]');
       else focusFirst('[data-act="host-back"]');
       if (status && status.code) {
         var offerArea = rootEl.querySelector('#offerCode');
-        if (offerArea) offerArea.value = status.code;
+        if (offerArea) offerArea.value = chunkCode(status.code);
       }
     }
 
@@ -431,9 +461,11 @@
         '<h2>Join game</h2>' +
         '<span class="netpan-sub">' + (connType === 'bluetooth' ? 'Bluetooth tethering' : 'Wi-Fi hotspot') + ' &middot; no internet</span>' +
         '<p class="netpan-help">' + connHelp() + '</p>' +
-        '<label class="netpan-label">1. Paste the host invite code:</label>' +
-        '<textarea class="netpan-code" id="joinOffer" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="Invite code from the host phone">' + esc(status && status.offer || '') + '</textarea>' +
+        '<label class="netpan-label">1. Paste or type the host invite code:</label>' +
+        '<textarea class="netpan-code" id="joinOffer" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" inputmode="text" onfocus="try{this.select();this.setSelectionRange(0,this.value.length);}catch(e){}" placeholder="Invite code from the host phone">' + esc(chunkCode(status && status.offer || '')) + '</textarea>' +
         '<div class="netpan-btns">' +
+        '<button type="button" data-act="paste-offer" class="alt">Paste code</button>' +
+        '<button type="button" data-act="select-offer" class="alt">Select all</button>' +
         '<button type="button" data-act="reply" class="wide">Create reply code</button>' +
         '<button type="button" data-act="join-back" class="alt wide">Cancel</button>' +
         '</div>' +
@@ -443,7 +475,7 @@
       focusFirst('#joinOffer');
       if (status && status.offer) {
         var joinArea = rootEl.querySelector('#joinOffer');
-        if (joinArea) joinArea.value = status.offer;
+        if (joinArea) joinArea.value = chunkCode(status.offer);
       }
     }
 
@@ -452,17 +484,17 @@
         '<div class="netpanel">' +
         '<h2>Reply code</h2>' +
         '<p class="netpan-help">Send this reply code back to the host phone. Keep this screen open.</p>' +
-        '<textarea class="netpan-code" id="replyCode" readonly spellcheck="false">' + esc(answer) + '</textarea>' +
+        '<textarea class="netpan-code" id="replyCode" readonly spellcheck="false" onfocus="try{this.select();this.setSelectionRange(0,this.value.length);}catch(e){}">' + esc(chunkCode(answer)) + '</textarea>' +
         codeButtons() +
         '<div class="netpan-btns">' +
         '<button type="button" data-act="join-back" class="alt wide">Cancel</button>' +
         '</div>' +
         '<p class="netpan-status wait" id="netStatus">Waiting for host to connect...</p>' +
-        '<p class="netpan-tip">Host must paste this reply code and tap Connect. Both phones need to stay on the same hotspot / Bluetooth network.</p>' +
+        '<p class="netpan-tip">Spaces in the code are okay. Host must paste this reply code and tap Connect.</p>' +
         '</div>';
       focusFirst('[data-act="copy"]');
       var area = rootEl.querySelector('#replyCode');
-      if (area) area.value = answer;
+      if (area) area.value = chunkCode(answer);
     }
 
     function renderError(title, msg) {
@@ -546,6 +578,24 @@
       }
     }
 
+    function pasteInto(id) {
+      var el = rootEl.querySelector('#' + id);
+      if (!el) return;
+      function done(v) {
+        if (v != null && String(v).trim()) el.value = String(v).trim();
+        try { el.focus(); el.select(); el.setSelectionRange(0, el.value.length); } catch (e) {}
+      }
+      if (root.navigator && root.navigator.clipboard && typeof root.navigator.clipboard.readText === 'function') {
+        root.navigator.clipboard.readText().then(done).catch(function () {
+          try { el.focus(); el.select(); } catch (e) {}
+          statusText('Paste failed. Tap the box and paste/type manually.', 'err');
+        });
+      } else {
+        try { el.focus(); el.select(); } catch (e) {}
+        statusText('Paste is not available here. Select the box and type/paste the code.', 'err');
+      }
+    }
+
     function onCopySuccess() {
       statusText('Code copied. Now paste it on the other phone.', 'ok');
     }
@@ -583,11 +633,30 @@
         }
         return;
       }
+      if (act === 'select-code') {
+        var selEl = rootEl.querySelector(role === 'host' ? '#offerCode' : '#replyCode');
+        if (selEl) {
+          try { selEl.focus(); selEl.select(); selEl.setSelectionRange(0, selEl.value.length); } catch (e) {}
+        }
+        return;
+      }
+      if (act === 'select-answer') {
+        var aEl = rootEl.querySelector('#answerCode');
+        if (aEl) { try { aEl.focus(); aEl.select(); aEl.setSelectionRange(0, aEl.value.length); } catch (e) {} }
+        return;
+      }
+      if (act === 'select-offer') {
+        var oEl = rootEl.querySelector('#joinOffer');
+        if (oEl) { try { oEl.focus(); oEl.select(); oEl.setSelectionRange(0, oEl.value.length); } catch (e) {} }
+        return;
+      }
+      if (act === 'paste-answer') { pasteInto('answerCode'); return; }
+      if (act === 'paste-offer') { pasteInto('joinOffer'); return; }
       if (act === 'share') {
         var shareEl = rootEl.querySelector(role === 'host' ? '#offerCode' : '#replyCode');
         if (shareEl) {
           shareText(shareEl.value, 'Offline game pairing code').then(function () {
-            statusText('Code shared.', 'ok');
+            statusText('Code shared via SMS/Bluetooth/Share sheet.', 'ok');
           }).catch(function () {
             if (copyText(shareEl.value)) onCopySuccess(); else onCopyFail();
           });
